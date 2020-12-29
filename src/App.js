@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Header from './Components/Header.js';
-import Scanner from './Components/Scanner.js';
+import ScanAndResult from './Components/ScanAndResult.js';
 import Intro from './Components/Intro.js';
 import NotFound from './Components/NotFound.js';
 
@@ -15,7 +15,7 @@ function App() {
       <Header></Header>
       <Switch>
         <Route path="/" component={Intro} exact />
-        <Route path="/scanner" component={Scanner} />
+        <Route path="/scanner" component={ScanAndResult} />
         <Route component={NotFound} />
       </Switch>
     </main>
