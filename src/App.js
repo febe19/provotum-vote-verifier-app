@@ -1,16 +1,24 @@
 import React from 'react';
 import './App.css';
 import Header from './Components/Header.js';
-import Scanner from './Components/Scanner.js'
+import Scanner from './Components/Scanner.js';
+import Intro from './Components/Intro.js';
+import NotFound from './Components/NotFound.js';
+
+
+import { Route, Switch } from 'react-router-dom';
+
 
 function App() {
   return (
-    <div >
+    <main >
       <Header></Header>
-      <p1>Hello This is a test</p1>
-      <div id="scanner"></div>
-      <Scanner />
-    </div>
+      <Switch>
+        <Route path="/" component={Intro} exact />
+        <Route path="/scanner" component={Scanner} />
+        <Route component={NotFound} />
+      </Switch>
+    </main>
   );
 }
 
