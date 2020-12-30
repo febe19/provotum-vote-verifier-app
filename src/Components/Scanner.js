@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import QrReader from 'react-qr-reader'
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 class Scanner extends Component {
   constructor(props) {
