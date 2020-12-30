@@ -70,32 +70,3 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
-
-// Cache used to store Things for offline usage
-const cacheName = 'PVVA-cache-v1'
-const resourcesToPrecache = [
-  '/', 
-  'index.html',
-]
-
-// Service Worker to load Files in Cache
-self.addEventListener('install', event => {
-  console.log("Service Worker: Install event!");
-  event.waitUntil(
-    caches.open(cacheName)
-      .then(cache => {
-        return cache.addAll(resourcesToPrecache)
-      })
-  );
-});
-
-// Service Worker for fetching stuff out of the cache. 
-// This tries teh cache first, and else fetch from the network. 
-self.addEventListener('fetch', event => {
-  console.log("Service Worker: Fetch event!");
-  event.respondWith(caches.match(event.request)
-    .then(cachedResponse => {
-      return cachedResponse || fetch(event.request)
-    })
-  );
-});
