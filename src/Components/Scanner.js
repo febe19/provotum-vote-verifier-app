@@ -1,10 +1,18 @@
+// https://github.com/kybarg/react-qr-scanner#readme
+
 import React, { Component } from 'react'
-import QrReader from 'react-qr-scanner'
+import QrReader from 'react-qr-reader'
+import { Redirect } from "react-router-dom";
 
 class Scanner extends Component {
-  state = {
-    result: null,
-    
+  constructor(props) {
+    super(props)
+    console.log(props.showScanner)
+    this.state = {
+      result: null,
+      showScanner: true,
+    }
+
   }
 
   handleScan = data => {
@@ -12,6 +20,7 @@ class Scanner extends Component {
       console.log("Scanned Data: " + data)
       this.setState({
         result: data,
+        showScanner: false
       })
     }
   }
@@ -21,21 +30,31 @@ class Scanner extends Component {
   }
 
 
+  componentWillUnmount() {
+    console.log("Scanner will Unmount")
+    return null
+  }
+
   render() {
-    return (
-      <div>
-        <QrReader
-          delay={100}
-          onError={this.handleError}
-          onScan={this.handleScan}
-          onLoad={this.onLoad}
-          style={{ width: '100%' }}
-          facingMode={this.user}
-          showViewFinder={false}
-        />
-        <p>{this.state.result}</p>
-      </div>
-    )
+
+    if (this.state.result) {
+      return <Redirect to={{pathname: "/result", state: this.state.result}} />
+    } else {
+      return (
+        <div style={this.state.showScanner ? {} : {display: 'none'} }>
+          <QrReader
+            delay={100}
+            onError={this.handleError}
+            onScan={this.handleScan}
+            onLoad={this.onLoad}
+            style={{ width: '100%' }}
+            facingMode={this.environment}
+            showViewFinder={false}
+          />
+          <p>{this.state.result}</p>
+        </div>
+      )
+    }
   }
 }
 
