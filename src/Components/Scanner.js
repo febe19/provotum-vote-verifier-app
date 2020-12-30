@@ -32,7 +32,6 @@ class Scanner extends Component {
 
   componentWillUnmount() {
     console.log("Scanner will Unmount")
-    return null
   }
 
   render() {
