@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom'
 class Result extends Component {
   constructor(props) {
     super(props)
-    console.log(this.props.location.state)
+    console.log(props.location.data)
 
     this.state = {
-        data : this.props.location.state,
+        data : this.props.location.data,
     }
   }
 

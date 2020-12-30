@@ -2,14 +2,14 @@
 
 import React, { Component } from 'react'
 import QrReader from 'react-qr-reader'
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 class Scanner extends Component {
   constructor(props) {
     super(props)
     console.log(props.showScanner)
     this.state = {
-      result: null,
+      data: null,
       showScanner: true,
     }
 
@@ -19,7 +19,7 @@ class Scanner extends Component {
     if (data) {
       console.log("Scanned Data: " + data)
       this.setState({
-        result: data,
+        data: data,
         showScanner: false
       })
     }
@@ -29,18 +29,10 @@ class Scanner extends Component {
     console.error(err)
   }
 
-
-  componentWillUnmount() {
-    console.log("Scanner will Unmount")
-  }
-
   render() {
-
-    if (this.state.result) {
-      return <Redirect to={{pathname: "/result", state: this.state.result}} />
-    } else {
-      return (
-        <div style={this.state.showScanner ? {} : {display: 'none'} }>
+    return (
+      <div>
+        <div style={this.state.showScanner ? {} : { display: 'none' }}>
           <QrReader
             delay={100}
             onError={this.handleError}
@@ -50,10 +42,15 @@ class Scanner extends Component {
             facingMode={this.environment}
             showViewFinder={false}
           />
-          <p>{this.state.result}</p>
+
         </div>
-      )
-    }
+        <div hidden={this.state.showScanner}>
+          <Link to={{ pathname: '/result', data: this.state.data }}>
+            <button disabled={this.state.showScanner}>View Result</button>
+          </Link>
+        </div>
+      </div>
+    )
   }
 }
 
