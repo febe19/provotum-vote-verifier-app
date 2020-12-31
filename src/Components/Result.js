@@ -4,19 +4,22 @@ import { Link } from 'react-router-dom'
 class Result extends Component {
   constructor(props) {
     super(props)
-    console.log(props.location.data)
 
+    const qrdataObj = JSON.parse(props.location.qrdata)
     this.state = {
-        data : this.props.location.data,
+        qrdata : qrdataObj,
+        id: qrdataObj.id,
+        data: qrdataObj.data
     }
   }
-
   
-
   render() {
     return (
       <div>
-        <p>You voted for: {this.state.data}</p>
+        <h1>Vote Verification</h1>
+        <p>QRCode ID: {this.state.id}</p>
+        <p>Data: {this.state.data}</p>
+
 
         <Link to="/">
             <button>Back to Start</button>

@@ -45,7 +45,7 @@ class Scanner extends Component {
 
         </div>
         <div hidden={this.state.showScanner}>
-          <Link to={{ pathname: '/result', data: this.state.data }}>
+          <Link to={{ pathname: '/result', qrdata: this.state.data }}>
             <button disabled={this.state.showScanner}>View Result</button>
           </Link>
         </div>
