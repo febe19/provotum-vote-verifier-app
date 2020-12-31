@@ -5,8 +5,6 @@ import Scanner from "./Components/Scanner.js";
 import Result from './Components/Result.js';
 import Intro from './Components/Intro.js';
 import NotFound from './Components/NotFound.js';
-
-
 import { Route, Switch } from 'react-router-dom';
 
 
