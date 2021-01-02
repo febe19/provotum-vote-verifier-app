@@ -6,10 +6,9 @@ import QrReader from 'react-qr-reader'
 class QRCodeScanner extends Component {
     
     handleScan = data => {
-        const qrdataObj = JSON.parse(data)
         if (data) {
-            console.log("Scanned Data in child: ", qrdataObj)
-            this.props.onScan(qrdataObj)
+            console.log("scanned: ", data)
+            this.props.onScan(JSON.parse(data))
         }
     }
 
