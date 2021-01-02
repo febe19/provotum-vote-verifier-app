@@ -1,7 +1,7 @@
 // https://github.com/kybarg/react-qr-scanner#readme
 
 import React, { Component } from 'react'
-import QrReader from 'react-qr-reader'
+import QRCodeScanner from './../HelperFunctions/QRScanner.js'
 import { Link } from "react-router-dom";
 
 class Scanner extends Component {
@@ -12,12 +12,10 @@ class Scanner extends Component {
       data: null,
       showScanner: true,
     }
-
   }
 
   handleScan = data => {
     if (data) {
-      console.log("Scanned Data: " + data)
       this.setState({
         data: data,
         showScanner: false
@@ -33,16 +31,7 @@ class Scanner extends Component {
     return (
       <div>
         <div style={this.state.showScanner ? {} : { display: 'none' }}>
-          <QrReader
-            delay={100}
-            onError={this.handleError}
-            onScan={this.handleScan}
-            onLoad={this.onLoad}
-            style={{ width: '100%' }}
-            facingMode={this.environment}
-            showViewFinder={false}
-          />
-
+          <QRCodeScanner onScan={this.handleScan}/>
         </div>
         <div hidden={this.state.showScanner}>
           <Link to={{ pathname: '/result', qrdata: this.state.data }}>

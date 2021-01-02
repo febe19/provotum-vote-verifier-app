@@ -4,12 +4,10 @@ import { Link } from 'react-router-dom'
 class Result extends Component {
   constructor(props) {
     super(props)
-
-    const qrdataObj = JSON.parse(props.location.qrdata)
     this.state = {
-        qrdata : qrdataObj,
-        id: qrdataObj.id,
-        data: qrdataObj.data
+        qrdata : props.location.qrdata,
+        id: props.location.qrdata.id,
+        data: props.location.qrdata.data
     }
   }
   
