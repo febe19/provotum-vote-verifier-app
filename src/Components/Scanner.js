@@ -1,10 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BarcodeScannerComponent from "react-webcam-barcode-scanner";
 import { Link } from "react-router-dom";
 
-const Scanner = () => {
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
+}
 
-  const [data, setData] = useState('');
+export function useWindowDimensions() {
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return windowDimensions;
+}
+
+
+const Scanner = () => {
+  const { height, width } = useWindowDimensions();
+  console.log(width)
+
+  const [data, setData] = useState({});
+  const [error, setError] = useState();
   const [ballotHash, setBallotHash] = useState('');
   const [commitmentScanned, setCommitmentScanned] = useState(false);
   const [challengeScanned, setChallengeScanned] = useState(false);
@@ -15,6 +42,7 @@ const Scanner = () => {
   var voterPublicKeyH = ''
   var uniqueID = ''
   var challenge = {}
+  var cnt = 0;
 
   const qrCodeIsCommitment = (qrData) => {
     if ('id' in qrData && qrData.id === "Commitment") {
@@ -37,19 +65,28 @@ const Scanner = () => {
     }
   }
 
-  const qrCodeIsChallenge = (qrData) => {
+  const qrCodeIsChallenge = (qrData, cnt) => {
+    console.log("cnt: ", cnt)
+    console.log("data: ", data)
+    console.log("challenge: ", challenge)
+
     if ('id' in qrData && qrData.id === "Challenge") {
+
       if ('Counter' in qrData && 'Total' in qrData && qrData.Counter <= qrData.Total) {
-        
-        if (typeof challenge[qrData.Counter] === 'undefined') {
+        console.log(data[qrData.Counter])
+        console.log("TypeOf: ", typeof data[qrData.Counter])
+
+        if (typeof data[qrData.Counter] === 'undefined') {
           challenge[qrData.Counter] = qrData
-          setData(JSON.stringify(challenge))
-          console.log("Added Challenge with Counter: "+ qrData.Counter)
+          console.log(challenge)
+          setData(challenge)
+          console.log("Added Challenge with Counter: " + qrData.Counter)
+          return true
         } else {
-          console.log("Already Scanned Challenge with Counter: "+qrData.Counter)
+          console.log("Already Scanned Challenge with Counter: " + qrData.Counter)
           return false
         }
-        
+
       } else {
         return false
       }
@@ -59,12 +96,13 @@ const Scanner = () => {
   }
 
   const handleScan = (err, result) => {
+    cnt++
     if (result) {
       try {
         qrData = JSON.parse(result.text)
       } catch {
         console.log("Could not parse JSON --> Result", result.text);
-        setData("Scanned QR code is not of expected format");
+        setError("Scanned QR code is not of expected format");
         return;
       }
 
@@ -72,9 +110,9 @@ const Scanner = () => {
         setCommitmentScanned(true);
         setShowScanner(false);
 
-      } else if (!challengeScanned && qrCodeIsChallenge(qrData)) {
+      } else if (!challengeScanned && qrCodeIsChallenge(qrData, cnt)) {
         setChallengeScanned(true)
-        setShowScanner(false)
+        setShowScanner(true)
       } else {
         console.log("QR Code is neither Commitment nor Challenge. Or one is already scanned")
         return;
@@ -95,23 +133,26 @@ const Scanner = () => {
     <>
       {showScanner &&
         <div>
-          {!commitmentScanned && <div>
+          {!commitmentScanned && <div style={{ margin: '10px' }}>
             Please scan the commitment
           </div>}
-          {!challengeScanned && commitmentScanned && <div>
+          {!challengeScanned && commitmentScanned && <div style={{ margin: '10px' }}>
             Please scan the Challenge
           </div>}
-          <BarcodeScannerComponent
-            width={500}
-            height={500}
-            onUpdate={handleScan}
-          />
+          <div style={{ margin: '10px', width: (window.innerWidth - '20px') }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <BarcodeScannerComponent
+                width={width}
+                onUpdate={handleScan}
+              />
+            </div>
+          </div>
         </div>
       }
-      <p>Ballot Hash: {ballotHash}</p>
-      <p>Data: {data}</p>
+      <p style={{ margin: '10px' }}>Ballot Hash: {ballotHash}</p>
+      <p style={{ margin: '10px' }}>Data: {JSON.stringify(data)}</p>
 
-      {commitmentScanned && !showScanner && <div>
+      {commitmentScanned && !showScanner && <div style={{ margin: '10px' }}>
         <p>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
         <Link to={{ pathname: '/result' }} >
           <button>Vote</button>
@@ -121,7 +162,7 @@ const Scanner = () => {
 
       {commitmentScanned && challengeScanned &&
         <div>
-          <p>You scanned the challenge. Continue with 'view challenge'</p>
+          <p style={{ margin: '10px' }}>You scanned the challenge. Continue with 'view challenge'</p>
           <Link to={{ pathname: '/result' }} >
             <button>View Challenge</button>
           </Link>
