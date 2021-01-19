@@ -31,10 +31,10 @@ const QRScanner = () => {
     const { height, width } = useWindowDimensions();
     console.log("QRScanner Rendered")
     const dispatch = useDispatch()
-    
+
     const handleScan = (err, result) => {
         if (result !== undefined) {
-            dispatch({type: "RESULT", payload: result})
+            dispatch({ type: "RESULT", payload: result.text })
             //console.log(result)
         }
     }
@@ -42,6 +42,7 @@ const QRScanner = () => {
     return (
         <>
             <BarcodeScannerComponent
+                audio={false}
                 width={width}
                 onUpdate={handleScan}
             />

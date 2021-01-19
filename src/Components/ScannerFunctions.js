@@ -30,10 +30,16 @@ const ScannerFunctions = () => {
   var qrData = {}
 
   useEffect(() => {
+    
     if (result !== null) {
-      console.log(result)
+      qrData = {};
+      console.log("Scanned Result: ",result)
       try {
-        qrData = JSON.parse(result.text)
+        qrData = JSON.parse(result)
+        if ('id' in qrData && ('Commitment' in qrData || 'Challenge' in qrData)){
+          console.log("Looks like a valid QRCode")
+        }
+
       } catch {
         console.log("Could not parse JSON --> Result", result.text);
         return;
@@ -62,6 +68,7 @@ const ScannerFunctions = () => {
   }, [scannedChallengesNumbers])
 
   const qrCodeIsCommitment = (qrData) => {
+    console.log("Commitment check for: ", qrData)
     if ('id' in qrData && qrData.id === "Commitment") {
       if ('Counter' in qrData && 'Total' in qrData && qrData.Counter <= qrData.Total) {
         if (('BH' in qrData) && ('VotingQuestions' in qrData)) {
@@ -81,6 +88,7 @@ const ScannerFunctions = () => {
   }
 
   const qrCodeIsChallenge = (qrData) => {
+    console.log("Challenge check for: ", qrData)
     if ('id' in qrData && qrData.id === "Challenge") {
       if ('Counter' in qrData && 'Total' in qrData && qrData.Counter <= qrData.Total) {
         if (!scannedChallengesNumbers.includes(qrData.Counter)) {
