@@ -1,11 +1,22 @@
 const initState = {
-    showScanner: true
+    showScanner: true,
+    scannedChallengesNumbers: [],
+    totalNrOfChallenges: 0
 };
 
 
 function Reducer(state = initState, action) {
-    console.log("Reducer: ", action)
+    if (action.type != "RESULT") {
+        console.log("Reducer: ", action)
+    }
+
     switch (action.type) {
+        case "RESULT": {
+            return {
+                ...state,
+                result: action.payload
+            }
+        };
         case "ADD_COMMITMENT_DATA":
             return {
                 ...state,
@@ -17,6 +28,8 @@ function Reducer(state = initState, action) {
         case "ADD_CHALLENGE_DATA":
             return {
                 ...state,
+                scannedChallengesNumbers: [...state.scannedChallengesNumbers, action.payload.Counter], 
+                totalNrOfChallenges: action.payload.Total,
             };
         case "COMMITMENT_SCANNED":
             return {
@@ -39,7 +52,7 @@ function Reducer(state = initState, action) {
                 showScanner: false,
             };
         case "START_UP":
-            return state = undefined
+            return initState
         default:
             return initState;
     }

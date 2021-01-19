@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import BarcodeScannerComponent from "react-webcam-barcode-scanner";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux"
 import {
-  getBallotHash, getCommitmentScanned, getChallengeScanned, getShowScanner
+  getBallotHash, getCommitmentScanned, getChallengeScanned, getShowScanner, getScannedChallengesNumbers, getResult, getTotalNrOfChallenges
 } from '../Redux/Selector.js';
 
 function getWindowDimensions() {
@@ -30,8 +29,9 @@ export function useWindowDimensions() {
 }
 
 
-const Scanner = () => {
+const ScannerFunctions = () => {
   const { height, width } = useWindowDimensions();
+  console.log("ScannerFunctions Rendered")
 
   //REDUX stuff
   const dispatch = useDispatch()
@@ -39,12 +39,49 @@ const Scanner = () => {
   const commitmentScanned = useSelector(getCommitmentScanned)
   const challengeScanned = useSelector(getChallengeScanned)
   const showScanner = useSelector(getShowScanner)
-
-
-  console.log("Scanner initiated with width: ", width)
+  const result = useSelector(getResult)
+  const scannedChallengesNumbers = useSelector(getScannedChallengesNumbers)
+  const totalNrOfChallenges = useSelector(getTotalNrOfChallenges)
 
   var qrData = {}
   var cnt = 0;
+
+  useEffect(() => {
+    if (result !== null) {
+      try {
+        qrData = JSON.parse(result.text)
+      } catch {
+        console.log("Could not parse JSON --> Result", result.text);
+        return;
+      }
+
+      // Add qrData to commitment or challenge 
+      if (!commitmentScanned && qrCodeIsCommitment(qrData)) {
+        dispatch({ type: "HIDE_SCANNER" })
+        dispatch({ type: "COMMITMENT_SCANNED" })
+        dispatch({ type: "ADD_COMMITMENT_DATA", payload: qrData })
+        console.log("Commitment Scanned")
+
+      } else if (commitmentScanned && !challengeScanned && qrCodeIsChallenge(qrData, cnt)) {
+        //If check if all commitments are scanned
+        dispatch({ type: "ADD_CHALLENGE_DATA", payload: qrData })
+      
+      } else {
+        return;
+      }
+
+      //console.log("Parsed JSON: ", qrData)
+    }
+  }, [result]);
+
+  useEffect(() => {
+
+    if (totalNrOfChallenges != 0 && scannedChallengesNumbers.length == totalNrOfChallenges) {
+      dispatch({ type: "CHALLENGE_SCANNED" })
+      dispatch({ type: "HIDE_SCANNER" })
+    }
+
+  }, [scannedChallengesNumbers])
 
   const qrCodeIsCommitment = (qrData) => {
     if ('id' in qrData && qrData.id === "Commitment") {
@@ -70,9 +107,13 @@ const Scanner = () => {
 
     if ('id' in qrData && qrData.id === "Challenge") {
       if ('Counter' in qrData && 'Total' in qrData && qrData.Counter <= qrData.Total) {
-        //TODO: Add the Commitments to a state
-        console.log("Added Commitment", qrData.Counter)
-        return true;
+        if (!scannedChallengesNumbers.includes(qrData.Counter)) {
+          //TODO: Add the Commitments to a state
+          return true;
+        } else {
+          console.log("CHALLENGE: Already scanned challenge with ID: ", qrData.Counter)
+          return false
+        }
       } else {
         console.log("CHALLENGE: Problem with Counter")
         return false
@@ -80,34 +121,6 @@ const Scanner = () => {
     } else {
       console.log("CHALLENGE: Problem With ID")
       return false
-    }
-  }
-
-  const handleScan = (err, result) => {
-    cnt++
-    if (result) {
-      try {
-        qrData = JSON.parse(result.text)
-      } catch {
-        console.log("Could not parse JSON --> Result", result.text);
-        return;
-      }
-
-      if (!commitmentScanned && qrCodeIsCommitment(qrData)) {
-        dispatch({ type: "HIDE_SCANNER" })
-        dispatch({ type: "COMMITMENT_SCANNED" })
-        dispatch({ type: "ADD_COMMITMENT_DATA", payload: qrData })
-        console.log("Commitment Scanned")
-
-      } else if (commitmentScanned && !challengeScanned && qrCodeIsChallenge(qrData, cnt)) {
-        //If check if all commitments are scanned
-        dispatch({ type: "CHALLENGE_SCANNED" })
-        dispatch({ type: "HIDE_SCANNER" })
-      } else {
-        return;
-      }
-
-      console.log("Parsed JSON: ", qrData)
     }
   }
 
@@ -127,17 +140,14 @@ const Scanner = () => {
           </div>}
           <div style={{ margin: '10px', width: (window.innerWidth - '20px') }}>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <BarcodeScannerComponent
-                width={width}
-                onUpdate={handleScan}
-              />
+
             </div>
           </div>
         </div>
       }
       <p style={{ margin: '10px' }}>Ballot Hash: {ballotHash}</p>
 
-      {commitmentScanned && !showScanner && !challengeScanned &&<div style={{ margin: '10px' }}>
+      {commitmentScanned && !showScanner && !challengeScanned && <div style={{ margin: '10px' }}>
         <p>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
         <Link to={{ pathname: '/result' }} >
           <button>Vote</button>
@@ -158,4 +168,4 @@ const Scanner = () => {
   )
 }
 
-export default Scanner;
+export default ScannerFunctions;
