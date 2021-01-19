@@ -1,7 +1,10 @@
 const initState = {
     showScanner: true,
     scannedChallengesNumbers: [],
-    totalNrOfChallenges: 0
+    totalNrOfChallenges: 0,
+    publicKey: null,
+    voterPublicKeyH: null,
+    uniqueID: null,
 };
 
 
@@ -9,6 +12,9 @@ function Reducer(state = initState, action) {
     if (action.type != "RESULT") {
         console.log("Reducer: ", action)
     }
+    //publicKey: action.payload.publicKey,
+    //voterPublicKeyH: action.payload.voterPublicKeyH,
+    //uniqueID: action.payload.uniqueID,
 
     switch (action.type) {
         case "RESULT": {
@@ -21,14 +27,17 @@ function Reducer(state = initState, action) {
             return {
                 ...state,
                 ballotHash: action.payload.BH,
-                publicKey: action.payload.publicKey,
-                voterPublicKeyH: action.payload.voterPublicKeyH,
-                uniqueID: action.payload.uniqueID,
+                votingQuestions: action.payload.VotingQuestions
             };
         case "ADD_CHALLENGE_DATA":
+            console.log("Reducer Payload: ", action.payload)
+
             return {
                 ...state,
-                scannedChallengesNumbers: [...state.scannedChallengesNumbers, action.payload.Counter], 
+                publicKey: action.payload.publicKey ?? state.publicKey,
+                voterPublicKeyH: action.payload.voterPublicKeyH ?? state.voterPublicKeyH,
+                uniqueID: action.payload.uniqueID ?? state.uniqueID,
+                scannedChallengesNumbers: [...state.scannedChallengesNumbers, action.payload.Counter],
                 totalNrOfChallenges: action.payload.Total,
             };
         case "COMMITMENT_SCANNED":
