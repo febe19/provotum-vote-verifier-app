@@ -5,20 +5,17 @@ const initState = {
     publicKey: null,
     voterPublicKeyH: null,
     uniqueID: null,
-    votes: {}
+    votes: {},
+    CoC: ''
 };
 
 
 function Reducer(state = initState, action) {
-    if (action.type != "RESULT") {
+    if (action.type != "SCANNER_RESULT") { //TODO: REmove
         console.log("Reducer: ", action)
     }
-    //publicKey: action.payload.publicKey,
-    //voterPublicKeyH: action.payload.voterPublicKeyH,
-    //uniqueID: action.payload.uniqueID,
-
     switch (action.type) {
-        case "RESULT": {
+        case "SCANNER_RESULT": {
             return {
                 ...state,
                 result: action.payload
@@ -31,9 +28,6 @@ function Reducer(state = initState, action) {
                 votingQuestions: action.payload.VotingQuestions
             };
         case "ADD_CHALLENGE_DATA":
-            console.log("Reducer Payload: ", action.payload)
-
-            
             var votes = state.votes
             if (action.payload.Key != "GeneralData") {
                 var key = action.payload.Key
@@ -79,6 +73,11 @@ function Reducer(state = initState, action) {
                 ...initState, 
                 votes: {}
             };
+        case "CHALLENGE_OR_CHASE":
+            return {
+                ...state,
+                CoC: action.payload,
+            }
         default:
             return initState;
     }

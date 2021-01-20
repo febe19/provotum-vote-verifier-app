@@ -9,9 +9,6 @@ import {
   getScannedChallengesNumbers,
   getResult,
   getTotalNrOfChallenges,
-  getVoterPublicKeyH,
-  getUniqueID,
-  getPublicKey
 } from '../Redux/Selector.js';
 
 const ScannerFunctions = () => {
@@ -109,6 +106,12 @@ const ScannerFunctions = () => {
 
   const onChallenge = () => {
     dispatch({ type: "SHOW_SCANNER" })
+    dispatch({type: "CHALLENGE_OR_CHASE", payload: "CHALLENGE"})
+  }
+
+  const onCast = () => {
+    dispatch({type: "HIDE_SCANNER"})
+    dispatch({type: "CHALLENGE_OR_CHASE", payload: "CAST"})
   }
 
   return (
@@ -127,8 +130,8 @@ const ScannerFunctions = () => {
 
       {commitmentScanned && !showScanner && !challengeScanned && <div style={{ margin: '10px' }}>
         <p>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
-        <Link to={{ pathname: '/result' }} >
-          <button>Vote</button>
+        <Link onClick={onCast} to={{ pathname: '/result' }} >
+          <button>Cast</button>
         </Link>
         <button onClick={onChallenge}>Challenge</button>
       </div>}

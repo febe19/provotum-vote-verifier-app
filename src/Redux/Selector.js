@@ -20,6 +20,8 @@ export const getTotalNrOfChallenges = (state) => state?.totalNrOfChallenges ?? 0
 
 export const getShowScanner = (state) => state?.showScanner ?? false;
 
+export const getChallengeOrCast = (state) => state?.CoC ?? '';
+
 
 
 
