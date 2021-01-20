@@ -1,10 +1,10 @@
 import React from 'react';
-import QRScanner from './QRScanner.js'
-import ScannerFunctions from './ScannerFunctions.js'
+import QRScanner from './QRScanner'
+import ScannerFunctions from './ScannerFunctions'
 import { useSelector } from "react-redux"
 import {
     getShowScanner
-} from '../Redux/Selector.js';
+} from '../Redux/Selector';
 
 const ScannerComponent = () => {
     console.log("Scanner Component Rendered")
@@ -12,9 +12,9 @@ const ScannerComponent = () => {
 
     return (
         <div>
-            <div style={{ margin: '10px', width: (window.innerWidth - '20px') }}>
+            <div style={{ margin: '10px', width: (window.innerWidth) }}>
                 {showScanner &&
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', hidden: !showScanner }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                         <QRScanner />
                     </div>
                 }

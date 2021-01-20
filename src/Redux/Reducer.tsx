@@ -10,7 +10,7 @@ const initState = {
 };
 
 
-function Reducer(state = initState, action) {
+function Reducer(state: any = initState, action: any) {
     if (action.type != "SCANNER_RESULT") { //TODO: REmove
         console.log("Reducer: ", action)
     }

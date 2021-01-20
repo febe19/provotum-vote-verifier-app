@@ -9,7 +9,7 @@ import {
   getScannedChallengesNumbers,
   getResult,
   getTotalNrOfChallenges,
-} from '../Redux/Selector.js';
+} from '../Redux/Selector';
 
 const ScannerFunctions = () => {
   console.log("ScannerFunctions Rendered")
@@ -64,7 +64,7 @@ const ScannerFunctions = () => {
     }
   }, [scannedChallengesNumbers])
 
-  const qrCodeIsCommitment = (qrData) => {
+  const qrCodeIsCommitment = (qrData: any) => {
     console.log("Commitment check for: ", qrData)
     if ('id' in qrData && qrData.id === "Commitment") {
       if ('Counter' in qrData && 'Total' in qrData && qrData.Counter <= qrData.Total) {
@@ -84,7 +84,7 @@ const ScannerFunctions = () => {
     }
   }
 
-  const qrCodeIsChallenge = (qrData) => {
+  const qrCodeIsChallenge = (qrData: any) => {
     console.log("Challenge check for: ", qrData)
     if ('id' in qrData && qrData.id === "Challenge") {
       if ('Counter' in qrData && 'Total' in qrData && qrData.Counter <= qrData.Total) {

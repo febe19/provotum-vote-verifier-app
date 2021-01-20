@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
-import Header from './Components/Header.js';
-import ScannerComponent from "./Components/ScannerComponent.js";
-import Result from './Components/Result.js';
-import Intro from './Components/Intro.js';
-import NotFound from './Components/NotFound.js';
+import Header from './Components/Header';
+import ScannerComponent from "./Components/ScannerComponent";
+import Result from './Components/Result';
+import Intro from './Components/Intro';
+import NotFound from './Components/NotFound';
 import { Route, Switch } from 'react-router-dom';
 
 

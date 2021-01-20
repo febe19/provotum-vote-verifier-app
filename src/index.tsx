@@ -7,11 +7,11 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from "react-redux"
 import { createStore } from "redux"
-import Reducer from "./Redux/Reducer.js"
+import Reducer from "./Redux/Reducer"
 
 const store = createStore(
   Reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() //TODO: Disable dis line to remove REDUX insight
+  //window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() //TODO: Disable dis line to remove REDUX insight
 )
 
 function getWindowDimensions() {
