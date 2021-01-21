@@ -1,18 +1,31 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from "react-redux"
+import { bnToHex, hexToBn, u8aToHex } from '@polkadot/util';
 import { Link } from 'react-router-dom'
+import BN from 'bn.js';
+import sha256 from 'crypto-js/sha256';
+
 import {
   getChallengeOrCast,
   getReceivedBallotHash,
   getCalculatedBallotHash,
   getVotes,
+  getPublicKey,
+  getVoterPublicKeyH,
 } from '../Redux/Selector'
 
-import { encrypt } from '@hoal/evote-crypto-ts'
+import {
+  encrypt,
+  verifyReEncryptionProof,
+  ElGamalPublicKey
+} from '@hoal/evote-crypto-ts'
 
 const CreateEncryptedBallot = () => {
   console.log("start Create")
   const votes: Array<any> = useSelector(getVotes)
+  const publicKey: ElGamalPublicKey = useSelector(getPublicKey)
+  const voterPublicKeyH: BN = useSelector(getVoterPublicKeyH)
+  var allVerified: any = null
 
   console.log("Votes: ", votes)
 
@@ -21,16 +34,36 @@ const CreateEncryptedBallot = () => {
   Object.entries(votes).forEach(([key, value]) => {
     console.log("Anser Bin: ", value.answerBin)
     const encryptedVote: Array<any> = []
+
+    //const encryptedBallot = encrypt(value.answerBin, publicKey, value.nonce);
+
+    //var verifies = verifyReEncryptionProof(
+    //  value.reEncryptionProof,
+    //  value.reEncryptedBallot,
+    //  encryptedBallot,
+    //  publicKey,
+    //  voterPublicKeyH,
+    //);
+
+    //allVerified = allVerified !== null ? (verifies && allVerified ? (true) : (false)) : (verifies)
+
+    const cipherToSubstrate = {
+      c: bnToHex(value.reEncryptedBallot.c),
+      d: bnToHex(value.reEncryptedBallot.c),
+    };
+
     encryptedVote.push(key);
-    encryptedVote.push(value.nonce)
-    encryptedVote.push(value.reEncryptedBallot)
+    encryptedVote.push(cipherToSubstrate);
+
 
     encryptedBallots.push(encryptedVote)
   })
 
 
   console.log("encryptedBallots JSON: ", JSON.stringify(encryptedBallots))
-  return encryptedBallots
+
+  return [encryptedBallots, allVerified]
+  
 }
 
 
@@ -43,8 +76,13 @@ const Result = () => {
   const challengeOrCast = useSelector(getChallengeOrCast);
 
   const encryptedBallots: Array<any> = CreateEncryptedBallot();
-
   console.log("after Create", encryptedBallots)
+
+  dispatch({
+    type: "CALCULATED_BALLOT_HASH",
+    payload: sha256(JSON.stringify(encryptedBallots)).toString()
+  }) 
+  console.log("CalculatedBallotHash: ", sha256(JSON.stringify(encryptedBallots)).toString())
 
   return (
     <div>
