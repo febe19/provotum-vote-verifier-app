@@ -7,22 +7,14 @@ const QRScanner = () => {
     console.log("QRScanner Rendered")
     const dispatch = useDispatch()
 
-    const handleScan = (err: any, result: any) => {
-        if (result !== undefined) {
-            dispatch({ type: "SCANNER_RESULT", payload: result.text })
-        }
-    }
-
-    const handleScan2 = (result: any) => {
-        console.log(result)
+    const handleScan = (result: any) => {
         if (result !== null) {
-            console.log("Dispatch")
             dispatch({ type: "SCANNER_RESULT", payload: result })
         }
     }
 
     const handleError = (err: any) => {
-
+        console.log(err)
     }
 
     return (
@@ -32,7 +24,7 @@ const QRScanner = () => {
                 facingMode={"environment"}
                 showViewFinder={true}
                 onError={handleError}
-                onScan={handleScan2}
+                onScan={handleScan}
                 style={{ width: '90%', height: '90%' }}
             />
         </>
