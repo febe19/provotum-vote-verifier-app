@@ -24,7 +24,7 @@ export const getShowScanner = (state: any) => state?.showScanner ?? false;
 
 export const getChallengeOrCast = (state: any) => state?.CoC ?? '';
 
-export const getVotes = (state: any) => state?.Votes ?? null;
+export const getVotes = (state: any) => state?.votes ?? null;
 
 
 

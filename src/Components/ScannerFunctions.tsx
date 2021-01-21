@@ -126,7 +126,7 @@ const ScannerFunctions = () => {
             Please scan the Challenge
             </div>
             <div>
-              Currently scanned {scannedChallengesNumbers}/{totalNrOfChallenges}
+              Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}
             </div>
           </div>}
         </div>

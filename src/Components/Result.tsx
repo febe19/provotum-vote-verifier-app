@@ -7,15 +7,30 @@ import {
   getCalculatedBallotHash,
   getVotes,
 } from '../Redux/Selector'
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { encrypt } from '@hoal/evote-crypto-ts'
 
-const createEncryptedBallot = () => async (dispatch: any) => {
+const CreateEncryptedBallot = () => {
+  console.log("start Create")
+  const votes: Array<any> = useSelector(getVotes)
 
-  const votes = useSelector(getVotes)
+  console.log("Votes: ", votes)
 
-  console.log(votes)
+  const encryptedBallots: Array<any> = []
+
+  Object.entries(votes).forEach(([key, value]) => {
+    console.log("Anser Bin: ", value.answerBin)
+    const encryptedVote: Array<any> = []
+    encryptedVote.push(key);
+    encryptedVote.push(value.nonce)
+    encryptedVote.push(value.reEncryptedBallot)
+
+    encryptedBallots.push(encryptedVote)
+  })
+
+
+  console.log("encryptedBallots JSON: ", JSON.stringify(encryptedBallots))
+  return encryptedBallots
 }
 
 
@@ -27,7 +42,9 @@ const Result = () => {
   const calculatedBallotHash = useSelector(getCalculatedBallotHash);
   const challengeOrCast = useSelector(getChallengeOrCast);
 
-  createEncryptedBallot();
+  const encryptedBallots: Array<any> = CreateEncryptedBallot();
+
+  console.log("after Create", encryptedBallots)
 
   return (
     <div>
@@ -48,10 +65,6 @@ const Result = () => {
 
       {challengeOrCast == "CHALLENGE" &&
         <div>
-          {calculatedBallotHash !== null ?? <div>
-            <CircularProgress />
-            <p>Encryption in Progress</p>
-          </div>}
           <div>ReceivedBallotHash: {receivedBallotHash}</div>
           <div>Calculated BallotHash: {calculatedBallotHash}</div>
         </div>

@@ -7,7 +7,7 @@ const initState = {
     publicKey: null,
     voterPublicKeyH: null,
     uniqueID: null,
-    votes: {},
+    votes: [],
     CoC: ''
 };
 
