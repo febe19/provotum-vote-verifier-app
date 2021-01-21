@@ -1,5 +1,7 @@
 const initState = {
     showScanner: true,
+    receivedBallotHash: null,
+    calculatedBallotHash: null,
     scannedChallengesNumbers: [],
     totalNrOfChallenges: 0,
     publicKey: null,
@@ -24,7 +26,7 @@ function Reducer(state: any = initState, action: any) {
         case "ADD_COMMITMENT_DATA":
             return {
                 ...state,
-                ballotHash: action.payload.BH,
+                receivedBallotHash: action.payload.BH,
                 votingQuestions: action.payload.VotingQuestions
             };
         case "ADD_CHALLENGE_DATA":

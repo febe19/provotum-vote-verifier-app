@@ -2,7 +2,9 @@ export const getResult = (state: any) => state?.result ?? null;
 
 export const getVotingQuestions = (state: any) => state?.votingQuestions ?? '';
 
-export const getBallotHash = (state: any) => state?.ballotHash ?? '';
+export const getReceivedBallotHash = (state: any) => state?.receivedBallotHash ?? '';
+
+export const getCalculatedBallotHash = (state: any) => state?.calculatedBallotHash ?? '';
 
 export const getCommitmentScanned = (state: any) => state?.commitmentScanned ?? '';
 
@@ -21,6 +23,8 @@ export const getTotalNrOfChallenges = (state: any) => state?.totalNrOfChallenges
 export const getShowScanner = (state: any) => state?.showScanner ?? false;
 
 export const getChallengeOrCast = (state: any) => state?.CoC ?? '';
+
+export const getVotes = (state: any) => state?.Votes ?? null;
 
 
 

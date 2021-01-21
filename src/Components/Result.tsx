@@ -3,17 +3,31 @@ import { useSelector, useDispatch } from "react-redux"
 import { Link } from 'react-router-dom'
 import {
   getChallengeOrCast,
-  getBallotHash,
+  getReceivedBallotHash,
+  getCalculatedBallotHash,
+  getVotes,
 } from '../Redux/Selector'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { encrypt } from '@hoal/evote-crypto-ts'
+
+const createEncryptedBallot = () => async (dispatch: any) => {
+
+  const votes = useSelector(getVotes)
+
+  console.log(votes)
+}
+
 
 const Result = () => {
 
   // REDUX Stuff
   const dispatch = useDispatch()
-  const ballotHash = useSelector(getBallotHash);
+  const receivedBallotHash = useSelector(getReceivedBallotHash);
+  const calculatedBallotHash = useSelector(getCalculatedBallotHash);
   const challengeOrCast = useSelector(getChallengeOrCast);
+
+  createEncryptedBallot();
 
   return (
     <div>
@@ -34,7 +48,12 @@ const Result = () => {
 
       {challengeOrCast == "CHALLENGE" &&
         <div>
-          <p>Encryption in Progress</p>
+          {calculatedBallotHash !== null ?? <div>
+            <CircularProgress />
+            <p>Encryption in Progress</p>
+          </div>}
+          <div>ReceivedBallotHash: {receivedBallotHash}</div>
+          <div>Calculated BallotHash: {calculatedBallotHash}</div>
         </div>
       }
 

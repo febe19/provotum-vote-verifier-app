@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux"
 import {
-  getBallotHash,
+  getReceivedBallotHash,
   getCommitmentScanned,
   getChallengeScanned,
   getShowScanner,
@@ -16,7 +16,7 @@ const ScannerFunctions = () => {
 
   //REDUX stuff
   const dispatch = useDispatch()
-  const ballotHash = useSelector(getBallotHash);
+  const receivedBallotHash = useSelector(getReceivedBallotHash);
   const commitmentScanned = useSelector(getCommitmentScanned)
   const challengeScanned = useSelector(getChallengeScanned)
   const showScanner = useSelector(getShowScanner)
@@ -122,11 +122,16 @@ const ScannerFunctions = () => {
             Please scan the commitment
           </div>}
           {!challengeScanned && commitmentScanned && <div style={{ margin: '10px' }}>
+            <div>
             Please scan the Challenge
+            </div>
+            <div>
+              Currently scanned {scannedChallengesNumbers}/{totalNrOfChallenges}
+            </div>
           </div>}
         </div>
       }
-      <p style={{ margin: '10px' }}>Ballot Hash: {ballotHash}</p>
+      <p style={{ margin: '10px' }}>Ballot Hash: {receivedBallotHash}</p>
 
       {commitmentScanned && !showScanner && !challengeScanned && <div style={{ margin: '10px' }}>
         <p>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
