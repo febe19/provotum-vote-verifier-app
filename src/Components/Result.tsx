@@ -53,7 +53,7 @@ function CreateEncryptedBallot(votingQuestions: Array<any>, publicKey: ElGamalPu
 
     const cipherToSubstrate = {
       c: bnToHex(value.reEncryptedBallot.c),
-      d: bnToHex(value.reEncryptedBallot.c),
+      d: bnToHex(value.reEncryptedBallot.d),
     };
 
     encryptedVote.push(key);
@@ -96,7 +96,7 @@ const Result = () => {
       payload: crypto.SHA256(JSON.stringify(encryptionResult[0])).toString()
     })
     console.log("CalculatedBallotHash: ", crypto.SHA256(JSON.stringify(encryptionResult[0])).toString())
-    
+
 
   }, [])
 
@@ -121,8 +121,8 @@ const Result = () => {
 
       {challengeOrCast == "CHALLENGE" &&
         <div>
-          <div>ReceivedBallotHash: {receivedBallotHash}</div>
-          <div>Calculated BallotHash: {calculatedBallotHash}</div>
+          <div>RH -- {receivedBallotHash}</div>
+          <div>CH -- {calculatedBallotHash}</div>
         </div>
       }
 
