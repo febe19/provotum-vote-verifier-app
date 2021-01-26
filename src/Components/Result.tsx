@@ -20,25 +20,22 @@ import {
   ElGamalPublicKey,
 } from '@hoal/evote-crypto-ts'
 
-const CreateEncryptedBallot = () => {
+function CreateEncryptedBallot(votingQuestions: Array<any>, publicKey: ElGamalPublicKey, voterPublicKeyH: BN) {
   console.log("start Create")
-  const votes: Array<any> = useSelector(getVotingQuestions)
-  const publicKey: ElGamalPublicKey = useSelector(getPublicKey)
-  const voterPublicKeyH: BN = useSelector(getVoterPublicKeyH)
   var allVerified: any = null
+  var verifies: Boolean = false
 
-  console.log("Votes: ", votes)
+  console.log("Votes: ", votingQuestions)
 
   const encryptedBallots: Array<any> = []
 
-  Object.entries(votes).forEach(([key, value]) => {
-    console.log("Anser Bin: ", value.answerBin)
+  Object.entries(votingQuestions).forEach(([key, value]) => {
+    console.log("-----Start for key: ", key)
+    if (value.answerBin === undefined) {
+      console.log("-----End for key: ", key, " due to no answer given")
+      return
+    }
     const encryptedVote: Array<any> = []
-
-    console.log("publicKey: ", publicKey)
-
-    console.log("publicKey: ", publicKey.parameters)
-
 
     const encryptedBallot = encrypt(value.answerBin, publicKey, value.nonce);
 
@@ -64,12 +61,14 @@ const CreateEncryptedBallot = () => {
 
 
     encryptedBallots.push(encryptedVote)
+    console.log("-----End for key: ", key)
   })
 
 
   console.log("encryptedBallots JSON: ", JSON.stringify(encryptedBallots))
 
-  return [encryptedBallots, allVerified]
+  verifies = allVerified !== null ? (allVerified) : (false)
+  return [encryptedBallots, verifies]
 
 }
 
@@ -81,15 +80,27 @@ const Result = () => {
   const receivedBallotHash = useSelector(getReceivedBallotHash);
   const calculatedBallotHash = useSelector(getCalculatedBallotHash);
   const challengeOrCast = useSelector(getChallengeOrCast);
+  const votingQuestions: Array<any> = useSelector(getVotingQuestions)
+  const publicKey: ElGamalPublicKey = useSelector(getPublicKey)
+  const voterPublicKeyH: BN = useSelector(getVoterPublicKeyH)
+  var encryptionResult: Array<any> = []
 
-  const encryptedBallots: Array<any> = CreateEncryptedBallot();
-  console.log("after Create", encryptedBallots)
+  useEffect(() => {
+    console.log("RESULT - UseEffect")
+    encryptionResult = CreateEncryptedBallot(votingQuestions, publicKey, voterPublicKeyH);
+    console.log("Encrypted Ballots:", encryptionResult[0])
+    console.log("All Verified:", encryptionResult[1])
 
-  dispatch({
-    type: "CALCULATED_BALLOT_HASH",
-    payload: crypto.SHA256(JSON.stringify(encryptedBallots)).toString()
-  })
-  console.log("CalculatedBallotHash: ", crypto.SHA256(JSON.stringify(encryptedBallots)).toString())
+    dispatch({
+      type: "CALCULATED_BALLOT_HASH",
+      payload: crypto.SHA256(JSON.stringify(encryptionResult[0])).toString()
+    })
+    console.log("CalculatedBallotHash: ", crypto.SHA256(JSON.stringify(encryptionResult[0])).toString())
+    
+
+  }, [])
+
+  
 
   return (
     <div>
