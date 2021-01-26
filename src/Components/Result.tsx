@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { bnToHex, hexToBn, u8aToHex } from '@polkadot/util';
 import { Link } from 'react-router-dom'
 import BN from 'bn.js';
-import sha256 from 'crypto-js/sha256';
+import * as crypto from "crypto-js";
 
 import {
   getChallengeOrCast,
@@ -35,17 +35,21 @@ const CreateEncryptedBallot = () => {
     console.log("Anser Bin: ", value.answerBin)
     const encryptedVote: Array<any> = []
 
-    //const encryptedBallot = encrypt(value.answerBin, publicKey, value.nonce);
+    console.log("Encryption for: ", value)
+    
+    const encryptedBallot = encrypt(value.answerBin, publicKey, value.nonce);
 
-    //var verifies = verifyReEncryptionProof(
-    //  value.reEncryptionProof,
-    //  value.reEncryptedBallot,
-    //  encryptedBallot,
-    //  publicKey,
-    //  voterPublicKeyH,
-    //);
+    console.log("Encryption Done for: ", value)
 
-    //allVerified = allVerified !== null ? (verifies && allVerified ? (true) : (false)) : (verifies)
+    var verifies = verifyReEncryptionProof(
+      value.reEncryptionProof,
+      value.reEncryptedBallot,
+      encryptedBallot,
+      publicKey,
+      voterPublicKeyH,
+    );
+
+    allVerified = allVerified !== null ? (verifies && allVerified ? (true) : (false)) : (verifies)
 
     const cipherToSubstrate = {
       c: bnToHex(value.reEncryptedBallot.c),
@@ -55,7 +59,7 @@ const CreateEncryptedBallot = () => {
     encryptedVote.push(key);
     encryptedVote.push(cipherToSubstrate);
 
-
+    
     encryptedBallots.push(encryptedVote)
   })
 
@@ -80,9 +84,9 @@ const Result = () => {
 
   dispatch({
     type: "CALCULATED_BALLOT_HASH",
-    payload: sha256(JSON.stringify(encryptedBallots)).toString()
+    payload: crypto.SHA256(JSON.stringify(encryptedBallots)).toString()
   }) 
-  console.log("CalculatedBallotHash: ", sha256(JSON.stringify(encryptedBallots)).toString())
+  console.log("CalculatedBallotHash: ", crypto.SHA256(JSON.stringify(encryptedBallots)).toString())
 
   return (
     <div>
