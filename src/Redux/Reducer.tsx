@@ -7,7 +7,7 @@ const initState = {
     publicKey: null,
     voterPublicKeyH: null,
     uniqueID: null,
-    votes: {},
+    votes: [],
     CoC: ''
 };
 
@@ -45,7 +45,7 @@ function Reducer(state: any = initState, action: any) {
                 ...state,
                 publicKey: (state.publicKey ? (state.publicKey) : (action.payload.publicKey)),
                 voterPublicKeyH: (state.voterPublicKeyH ? (state.voterPublicKeyH):(action.payload.voterPublicKeyH)),
-                uniqueID: (state.uniqueID ? (state.uniqueID):(action.payload.uniqueID)),
+                //uniqueID: (state.uniqueID ? (state.uniqueID):(action.payload.uniqueID)),
                 scannedChallengesNumbers: [...state.scannedChallengesNumbers, action.payload.Counter],
                 totalNrOfChallenges: (state.totalNrOfChallenges ? (state.totalNrOfChallenges):(action.payload.Total)),
                 votes: votes
@@ -79,6 +79,11 @@ function Reducer(state: any = initState, action: any) {
             return {
                 ...state,
                 CoC: action.payload,
+            }
+        case "CALCULATED_BALLOT_HASH":
+            return {
+                ...state, 
+                calculatedBallotHash: action.payload,
             }
         default:
             return initState;

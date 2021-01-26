@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2015",
     "module": "esnext",
     "strict": true,
     "esModuleInterop": true,
@@ -8,8 +8,10 @@
     "forceConsistentCasingInFileNames": true,
     "lib": [
       "dom",
+      "ES5",
       "dom.iterable",
-      "esnext"
+      "esnext",
+      "ScriptHost"
     ],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
