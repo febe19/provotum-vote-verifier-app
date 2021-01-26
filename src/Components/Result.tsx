@@ -9,7 +9,7 @@ import {
   getChallengeOrCast,
   getReceivedBallotHash,
   getCalculatedBallotHash,
-  getVotes,
+  getVotingQuestions,
   getPublicKey,
   getVoterPublicKeyH,
 } from '../Redux/Selector'
@@ -17,12 +17,12 @@ import {
 import {
   encrypt,
   verifyReEncryptionProof,
-  ElGamalPublicKey
+  ElGamalPublicKey,
 } from '@hoal/evote-crypto-ts'
 
 const CreateEncryptedBallot = () => {
   console.log("start Create")
-  const votes: Array<any> = useSelector(getVotes)
+  const votes: Array<any> = useSelector(getVotingQuestions)
   const publicKey: ElGamalPublicKey = useSelector(getPublicKey)
   const voterPublicKeyH: BN = useSelector(getVoterPublicKeyH)
   var allVerified: any = null
@@ -35,8 +35,11 @@ const CreateEncryptedBallot = () => {
     console.log("Anser Bin: ", value.answerBin)
     const encryptedVote: Array<any> = []
 
-    console.log("Encryption for: ", value)
-    
+    console.log("publicKey: ", publicKey)
+
+    console.log("publicKey: ", publicKey.parameters)
+
+
     const encryptedBallot = encrypt(value.answerBin, publicKey, value.nonce);
 
     console.log("Encryption Done for: ", value)
@@ -59,7 +62,7 @@ const CreateEncryptedBallot = () => {
     encryptedVote.push(key);
     encryptedVote.push(cipherToSubstrate);
 
-    
+
     encryptedBallots.push(encryptedVote)
   })
 
@@ -67,7 +70,7 @@ const CreateEncryptedBallot = () => {
   console.log("encryptedBallots JSON: ", JSON.stringify(encryptedBallots))
 
   return [encryptedBallots, allVerified]
-  
+
 }
 
 
@@ -85,7 +88,7 @@ const Result = () => {
   dispatch({
     type: "CALCULATED_BALLOT_HASH",
     payload: crypto.SHA256(JSON.stringify(encryptedBallots)).toString()
-  }) 
+  })
   console.log("CalculatedBallotHash: ", crypto.SHA256(JSON.stringify(encryptedBallots)).toString())
 
   return (

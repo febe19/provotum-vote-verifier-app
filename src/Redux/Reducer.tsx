@@ -1,13 +1,22 @@
-const initState = {
+import BN from 'bn.js';
+
+export type State = {
+    showScanner: Boolean,
+    receivedBallotHash: String,
+    calculatedBallotHash: String,
+    scannedChallengesNumbers: Array<Number>,
+    totalNrOfChallenges: Number,
+    votingQuestions: Array<any>,
+    CoC: String
+}
+
+const initState: State = {
     showScanner: true,
-    receivedBallotHash: null,
-    calculatedBallotHash: null,
+    receivedBallotHash: '',
+    calculatedBallotHash: '',
     scannedChallengesNumbers: [],
     totalNrOfChallenges: 0,
-    publicKey: null,
-    voterPublicKeyH: null,
-    uniqueID: null,
-    votes: [],
+    votingQuestions: [],
     CoC: ''
 };
 
@@ -24,32 +33,54 @@ function Reducer(state: any = initState, action: any) {
             }
         };
         case "ADD_COMMITMENT_DATA":
+            var vQ: Array<any> = []
+            Object.entries(action.payload.VotingQuestions).forEach(([key, value]: any) => {
+                action.payload.VotingQuestions[key] = { Question: value }
+            })
+
+            Object.entries(action.payload.VotingQuestions).forEach(([key, value]: any) => {
+                console.log("Key: ", key, " --> ", value)
+            })
+            
             return {
                 ...state,
                 receivedBallotHash: action.payload.BH,
                 votingQuestions: action.payload.VotingQuestions
             };
         case "ADD_CHALLENGE_DATA":
-            var votes = state.votes
             if (action.payload.Key != "GeneralData") {
+
                 var key = action.payload.Key
-                votes[key] = {
-                    nonce: (state.votes[key] ? (state.votes[key].nonce ? (state.votes[key].nonce):(action.payload.Nonce)):(action.payload.Nonce)),
-                    answerBin: (state.votes[key] ? (state.votes[key].answerBin !== undefined ? (state.votes[key].answerBin):(action.payload.answerBin)):(action.payload.answerBin)),
-                    reEncryptedBallot: (state.votes[key] ? (state.votes[key].reEncryptedBallot ? (state.votes[key].reEncryptedBallot):(action.payload.reEncryptedBallot)):(action.payload.reEncryptedBallot)),
-                    reEncryptionProof: (state.votes[key] ? (state.votes[key].reEncryptionProof ? (state.votes[key].reEncryptionProof):(action.payload.reEncryptionProof)):(action.payload.reEncryptionProof)),
+
+                state.votingQuestions[key] = {
+                    Question: state.votingQuestions[key].Question,
+                    nonce: (state.votingQuestions[key] ? (state.votingQuestions[key].nonce ? (state.votingQuestions[key].nonce) : (action.payload.Nonce)) : (action.payload.Nonce)),
+                    answerBin: (state.votingQuestions[key] ? (state.votingQuestions[key].answerBin !== undefined ? (state.votingQuestions[key].answerBin) : (action.payload.answerBin)) : (action.payload.answerBin)),
+                    reEncryptedBallot: (state.votingQuestions[key] ? (state.votingQuestions[key].reEncryptedBallot ? (state.votingQuestions[key].reEncryptedBallot) : (action.payload.reEncryptedBallot)) : (action.payload.reEncryptedBallot)),
+                    reEncryptionProof: (state.votingQuestions[key] ? (state.votingQuestions[key].reEncryptionProof ? (state.votingQuestions[key].reEncryptionProof) : (action.payload.reEncryptionProof)) : (action.payload.reEncryptionProof)),
                 }
+
+                return {
+                    ...state,
+                    scannedChallengesNumbers: [...state.scannedChallengesNumbers, action.payload.Counter],
+                }
+
+                //votes[key] = objWithHexStrToBn(votes[key])
             }
-            
+
+            if (action.payload.Key == 'GeneralData') {
+                return {
+                    ...state,
+                    publicKey: (state.publicKey ? (state.publicKey) : action.payload.publicKey),
+                    voterPublicKeyH: (state.voterPublicKeyH ? (state.voterPublicKeyH) : objWithHexStrToBn(action.payload.voterPublicKeyH)),
+                    scannedChallengesNumbers: [...state.scannedChallengesNumbers, action.payload.Counter],
+                    totalNrOfChallenges: (state.totalNrOfChallenges ? (state.totalNrOfChallenges) : (action.payload.Total)),
+                };
+            }
+
             return {
-                ...state,
-                publicKey: (state.publicKey ? (state.publicKey) : (action.payload.publicKey)),
-                voterPublicKeyH: (state.voterPublicKeyH ? (state.voterPublicKeyH):(action.payload.voterPublicKeyH)),
-                //uniqueID: (state.uniqueID ? (state.uniqueID):(action.payload.uniqueID)),
-                scannedChallengesNumbers: [...state.scannedChallengesNumbers, action.payload.Counter],
-                totalNrOfChallenges: (state.totalNrOfChallenges ? (state.totalNrOfChallenges):(action.payload.Total)),
-                votes: votes
-            };
+                ...state
+            }
         case "COMMITMENT_SCANNED":
             return {
                 ...state,
@@ -72,7 +103,7 @@ function Reducer(state: any = initState, action: any) {
             };
         case "START_UP":
             return {
-                ...initState, 
+                ...initState,
                 votes: {}
             };
         case "CHALLENGE_OR_CHASE":
@@ -82,12 +113,36 @@ function Reducer(state: any = initState, action: any) {
             }
         case "CALCULATED_BALLOT_HASH":
             return {
-                ...state, 
+                ...state,
                 calculatedBallotHash: action.payload,
             }
         default:
             return initState;
     }
 }
+
+//This parses an obj to a BN with the according keys used already. Inspired by A.Hoffmann
+const objWithHexStrToBn = (obj: any) => {
+    if (obj === undefined) {
+        console.log("Return undefined for ", obj)
+        return
+    }
+
+    if (typeof obj === 'string') {
+        console.log("Return BN for ", obj)
+        return new BN(obj, 16);
+    }
+
+    Object.entries(obj).forEach(([key, value]: any) => {
+        console.log("obj for Each: ", key, " -> ", value, " ==> ", typeof value)
+        if (typeof value === 'object') {
+            objWithHexStrToBn(value);
+        } else {
+            if (value !== undefined) {
+                obj[key] = new BN(value.toString(), 16);
+            }
+        }
+    });
+};
 
 export default Reducer
