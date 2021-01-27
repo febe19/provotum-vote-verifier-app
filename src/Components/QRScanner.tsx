@@ -3,15 +3,40 @@ import { useDispatch } from "react-redux"
 import './OverallCSS.css'
 import React from 'react';
 import QrReader from "react-qr-reader"; // https://www.npmjs.com/package/@types/react-qr-reader
-import {ReactComponent as CameraFocusWhite} from './../CameraFocus.svg';
+import { ReactComponent as CameraFocusWhite } from './../CameraFocus.svg';
 import {
     RAT
 } from '../Redux/Reducer'
 
+import { useState, useEffect } from 'react';
 
+function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+        width,
+        height
+    };
+}
+
+function useWindowDimensions() {
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+    useEffect(() => {
+        function handleResize() {
+            setWindowDimensions(getWindowDimensions());
+        }
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return windowDimensions;
+}
 
 const QRScanner = () => {
     console.log("QRScanner Rendered")
+    const { height, width } = useWindowDimensions();
+    var sizeUsed = width*0.9 > height*0.9 ? height*0.9 : width*0.9
     const dispatch = useDispatch()
 
     const handleScan = (result: any) => {
@@ -25,7 +50,8 @@ const QRScanner = () => {
     }
 
     return (
-        <div className="qrScannerContainer">
+
+        <div className="qrScannerContainer" style={{ maxHeight: (sizeUsed - 40), maxWidth: (sizeUsed - 20) }}>
             <div className="svgClass" >
                 <svg viewBox={"0 0 630 630"}>
                     <CameraFocusWhite />
@@ -39,9 +65,8 @@ const QRScanner = () => {
                 onScan={handleScan}
                 style={{ widht: '100%', height: '100%' }}
             />
-
-
         </div>
+
     )
 }
 

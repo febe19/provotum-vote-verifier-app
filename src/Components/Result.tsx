@@ -27,7 +27,7 @@ import {
 
 // Actual Encryption of the data. 
 function CreateEncryptedBallot(votingQuestions: Array<any>, publicKey: ElGamalPublicKey, voterPublicKeyH: BN) {
-    var allVerified: any = null
+  var allVerified: any = null
   var verifies: Boolean = false
 
   const encryptedBallots: Array<any> = []
@@ -97,34 +97,38 @@ const Result = () => {
   }, [])
 
   return (
-    <div style={{ margin: '10px' }}>
-      <h1>Result</h1>
+    <div>
+      <div style={{ margin: '30px' }}>
+        <h1>Result</h1>
 
-      {challengeOrCast == "CAST" &&
-        <div>
-          <p>Your seelcted cast. Therefore, also select cast on the voting machine</p>
+        {challengeOrCast == "CAST" &&
+          <div>
+            <p>Your seelcted cast. Therefore, also select cast on the voting machine</p>
+          </div>
+        }
+
+        {challengeOrCast != "CAST" && challengeOrCast != 'CHALLENGE' &&
+          <div>
+            <p>You did not scan the commitment.</p>
+            <p>Please go back to start and restart the verification</p>
+          </div>
+        }
+
+        {challengeOrCast == "CHALLENGE" &&
+          <div>
+            <div>RH -- {receivedBallotHash}</div>
+            <div>CH -- {calculatedBallotHash}</div>
+            <div>Verification Result is: {verificationResult.toString()}</div>
+          </div>
+        }
+
+      </div>
+      <div className="buttonDiv">
+        <div className="buttonStyle">
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <Button variant="contained" color="primary" fullWidth={true}>Back to Start</Button>
+          </Link>
         </div>
-      }
-
-      {challengeOrCast != "CAST" && challengeOrCast != 'CHALLENGE' &&
-        <div>
-          <p>You did not scan the commitment.</p>
-          <p>Please go back to the Homescreen and restart the verification</p>
-        </div>
-      }
-
-      {challengeOrCast == "CHALLENGE" &&
-        <div>
-          <div>RH -- {receivedBallotHash}</div>
-          <div>CH -- {calculatedBallotHash}</div>
-          <div>Verification Result is: {verificationResult.toString()}</div>
-        </div>
-      }
-
-      <div>
-        <Link to="/" style={{ textDecoration: 'none' }}>
-        <Button variant="contained" color="primary">Back to Homescreen</Button>
-        </Link>
       </div>
     </div>
   )

@@ -122,38 +122,52 @@ const ScannerFunctions = () => {
   }
 
   return (
-    <div style={{ margin: '10px' }}>
-      {showScanner &&
-        <div>
-          {!commitmentScanned && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            Please scan the commitment displayed on the voting device
+    <div>
+      <div style={{ margin: '30px' }}>
+        {showScanner &&
+          <div>
+            {!commitmentScanned && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              Please scan the commitment displayed on the voting device
           </div>}
-          {!challengeScanned && commitmentScanned && <div>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              Please scan the Challenge displayed on the voting device
+            {!challengeScanned && commitmentScanned && <div>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                Please scan the Challenge displayed on the voting device
             </div>
-            <div>
-              Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}
-            </div>
-          </div>}
-        </div>
-      }
+              <div>
+                Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}
+              </div>
+            </div>}
+          </div>
+        }
 
+      </div>
       {commitmentScanned && !showScanner && !challengeScanned && <div>
-        <p>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
-
-        <Link onClick={onCast} to='/result' style={{ textDecoration: 'none' }}>
-          <Button variant="contained" color="primary">Cast</Button>
-        </Link>
-        <Button onClick={onChallenge} variant="contained" color="primary">Challenge</Button>
+        <h1>Commitment scann successful</h1>
+        <p style={{ margin: '30px' }}>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
+        <p style={{ margin: '30px' }}>Ballot Hash: {receivedBallotHash}</p>
+        
+        <div className="buttonDiv">
+          <div className="buttonStyle">
+            <Link onClick={onCast} to='/result' style={{ textDecoration: 'none' }}>
+              <Button variant="contained" color="primary" fullWidth={true}>Cast</Button>
+            </Link>
+          </div>
+          <div className="buttonStyle">
+            <Button onClick={onChallenge} variant="contained" color="primary" fullWidth={true}>Challenge</Button>
+          </div>
+        </div>
       </div>}
 
       {commitmentScanned && challengeScanned &&
         <div>
-          <p>You scanned the challenge. Continue with 'view challenge'</p>
-          <Link to='/result' style={{ textDecoration: 'none' }}>
-            <Button variant="contained" color="primary">View Challenge</Button>
-          </Link>
+          <p style={{ margin: '30px' }}>You scanned the challenge. Continue with 'view challenge'</p>
+          <div className="buttonDiv">
+            <div className="buttonStyle">
+              <Link to='/result' style={{ textDecoration: 'none' }}>
+                <Button variant="contained" color="primary" fullWidth={true}>View Challenge</Button>
+              </Link>
+            </div>
+          </div>
         </div>}
 
 
