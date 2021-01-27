@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 
+import {
+    RAT
+} from '../Redux/Reducer'
+
 
 const Intro = () => {
     const dispatch = useDispatch()
-    dispatch({type: "START_UP"});
+    dispatch({type: RAT.RESET});
 
     return (
         <div>

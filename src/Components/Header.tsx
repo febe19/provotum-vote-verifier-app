@@ -32,8 +32,6 @@ const useStyles = makeStyles((theme) => ({
 export default function ButtonAppBar() {
   const classes = useStyles();
 
-  console.log("Header Render")
-
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -44,7 +42,7 @@ export default function ButtonAppBar() {
             </IconButton>
           </Link>
           <Typography variant="h6" className={classes.title}>
-            Provotum Vote Verifier
+            Provotum Vote Verifier 
           </Typography>
         </Toolbar>
       </AppBar>
