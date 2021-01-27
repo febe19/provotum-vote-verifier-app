@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux"
+import Button from '@material-ui/core/Button';
 import {
   getReceivedBallotHash,
   getCommitmentScanned,
@@ -121,15 +122,15 @@ const ScannerFunctions = () => {
   }
 
   return (
-    <>
+    <div style={{ margin: '10px' }}>
       {showScanner &&
         <div>
-          {!commitmentScanned && <div style={{ margin: '10px' }}>
-            Please scan the commitment
+          {!commitmentScanned && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            Please scan the commitment displayed on the voting device
           </div>}
-          {!challengeScanned && commitmentScanned && <div style={{ margin: '10px' }}>
-            <div>
-              Please scan the Challenge
+          {!challengeScanned && commitmentScanned && <div>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              Please scan the Challenge displayed on the voting device
             </div>
             <div>
               Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}
@@ -137,26 +138,26 @@ const ScannerFunctions = () => {
           </div>}
         </div>
       }
-      <p style={{ margin: '10px' }}>Ballot Hash: {receivedBallotHash}</p>
 
-      {commitmentScanned && !showScanner && !challengeScanned && <div style={{ margin: '10px' }}>
+      {commitmentScanned && !showScanner && !challengeScanned && <div>
         <p>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
-        <Link onClick={onCast} to={{ pathname: '/result' }} >
-          <button>Cast</button>
+
+        <Link onClick={onCast} to='/result' style={{ textDecoration: 'none' }}>
+          <Button variant="contained" color="primary">Cast</Button>
         </Link>
-        <button onClick={onChallenge}>Challenge</button>
+        <Button onClick={onChallenge} variant="contained" color="primary">Challenge</Button>
       </div>}
 
       {commitmentScanned && challengeScanned &&
         <div>
-          <p style={{ margin: '10px' }}>You scanned the challenge. Continue with 'view challenge'</p>
-          <Link to={{ pathname: '/result' }} >
-            <button>View Challenge</button>
+          <p>You scanned the challenge. Continue with 'view challenge'</p>
+          <Link to='/result' style={{ textDecoration: 'none' }}>
+            <Button variant="contained" color="primary">View Challenge</Button>
           </Link>
         </div>}
 
 
-    </>
+    </div>
   )
 }
 

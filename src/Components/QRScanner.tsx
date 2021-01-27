@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
 import BarcodeScannerComponent from "react-webcam-barcode-scanner"; //https://www.npmjs.com/package/react-webcam-barcode-scanner TODO: Eventually delete
-import { useSelector, useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
+import './OverallCSS.css'
+import React from 'react';
 import QrReader from "react-qr-reader"; // https://www.npmjs.com/package/@types/react-qr-reader
+import {ReactComponent as CameraFocusWhite} from './../CameraFocus.svg';
 import {
     RAT
 } from '../Redux/Reducer'
+
+
 
 const QRScanner = () => {
     console.log("QRScanner Rendered")
@@ -21,16 +25,23 @@ const QRScanner = () => {
     }
 
     return (
-        <>
+        <div className="qrScannerContainer">
+            <div className="svgClass" >
+                <svg viewBox={"0 0 630 630"}>
+                    <CameraFocusWhite />
+                </svg>
+            </div>
             <QrReader
-                delay={300}
+                delay={200}
+                showViewFinder={false}
                 facingMode={"environment"}
-                showViewFinder={true}
                 onError={handleError}
                 onScan={handleScan}
-                style={{ width: '90%', height: '90%' }}
+                style={{ widht: '100%', height: '100%' }}
             />
-        </>
+
+
+        </div>
     )
 }
 

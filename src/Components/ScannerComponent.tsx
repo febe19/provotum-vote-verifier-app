@@ -12,14 +12,16 @@ const ScannerComponent = () => {
 
     return (
         <div>
+            <div>
+                <ScannerFunctions />
+            </div>
             <div style={{ margin: '10px' }}>
                 {showScanner &&
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <QRScanner />
                     </div>
                 }
             </div>
-            <ScannerFunctions />
         </div>
     )
 }

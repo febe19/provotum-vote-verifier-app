@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from "react-redux"
-import { bnToHex, hexToBn, u8aToHex } from '@polkadot/util';
+import { bnToHex } from '@polkadot/util';
+import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom'
 import BN from 'bn.js';
 import * as crypto from "crypto-js";
@@ -96,12 +97,12 @@ const Result = () => {
   }, [])
 
   return (
-    <div>
+    <div style={{ margin: '10px' }}>
       <h1>Result</h1>
 
       {challengeOrCast == "CAST" &&
         <div>
-          <p>Your ballot was cast. So you finished voting</p>
+          <p>Your seelcted cast. Therefore, also select cast on the voting machine</p>
         </div>
       }
 
@@ -121,8 +122,8 @@ const Result = () => {
       }
 
       <div>
-        <Link to="/">
-          <button>Back to Homescreen</button>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+        <Button variant="contained" color="primary">Back to Homescreen</Button>
         </Link>
       </div>
     </div>
