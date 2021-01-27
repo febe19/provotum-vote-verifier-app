@@ -11,10 +11,14 @@ import {
   getTotalNrOfChallenges,
 } from '../Redux/Selector';
 
+import {
+  RAT
+} from '../Redux/Reducer'
+
 const ScannerFunctions = () => {
   console.log("ScannerFunctions Rendered")
 
-  //REDUX stuff
+  //REDUX definitions
   const dispatch = useDispatch()
   const receivedBallotHash = useSelector(getReceivedBallotHash);
   const commitmentScanned = useSelector(getCommitmentScanned)
@@ -27,13 +31,13 @@ const ScannerFunctions = () => {
   var qrData = {}
 
   useEffect(() => {
-    
+
+    // Try to parse the result to JSON format
     if (result !== null) {
       qrData = {};
-      console.log("Scanned Result: ",result)
       try {
         qrData = JSON.parse(result)
-        if ('id' in qrData && ('Commitment' in qrData || 'Challenge' in qrData)){
+        if ('id' in qrData && ('Commitment' in qrData || 'Challenge' in qrData)) {
           console.log("Looks like a valid QRCode")
         }
 
@@ -42,30 +46,30 @@ const ScannerFunctions = () => {
         return;
       }
 
-      // Add qrData to commitment or challenge 
+      // Add qrData to commitment or challenge in Redux store. Before this check if it is needed anymore.
       if (!commitmentScanned && qrCodeIsCommitment(qrData)) {
-        dispatch({ type: "HIDE_SCANNER" })
-        dispatch({ type: "COMMITMENT_SCANNED" })
-        dispatch({ type: "ADD_COMMITMENT_DATA", payload: qrData })
-        console.log("Commitment Scanned")
+        dispatch({ type: RAT.HIDE_SCANNER })
+        dispatch({ type: RAT.COMMITMENT_SCANNED })
+        dispatch({ type: RAT.ADD_COMMITMENT_DATA, payload: qrData })
 
       } else if (commitmentScanned && !challengeScanned && qrCodeIsChallenge(qrData)) {
-        dispatch({ type: "ADD_CHALLENGE_DATA", payload: qrData })
+        dispatch({ type: RAT.ADD_CHALLENGE_DATA, payload: qrData })
       } else {
         return;
       }
     }
   }, [result]);
 
+  // Iff all challenges are scanned, hide the scanner 
   useEffect(() => {
     if (totalNrOfChallenges != 0 && scannedChallengesNumbers.length == totalNrOfChallenges) {
-      dispatch({ type: "CHALLENGE_SCANNED" })
-      dispatch({ type: "HIDE_SCANNER" })
+      dispatch({ type: RAT.CHALLENGE_SCANNED })
+      dispatch({ type: RAT.HIDE_SCANNER })
     }
   }, [scannedChallengesNumbers])
 
+  // Check if qr data is Commitment and if it fits expected form
   const qrCodeIsCommitment = (qrData: any) => {
-    console.log("Commitment check for: ", qrData)
     if ('id' in qrData && qrData.id === "Commitment") {
       if ('Counter' in qrData && 'Total' in qrData && qrData.Counter <= qrData.Total) {
         if (('BH' in qrData) && ('VotingQuestions' in qrData)) {
@@ -84,8 +88,8 @@ const ScannerFunctions = () => {
     }
   }
 
+  // Check if qr data is Challenge and if it fits expected form
   const qrCodeIsChallenge = (qrData: any) => {
-    console.log("Challenge check for: ", qrData)
     if ('id' in qrData && qrData.id === "Challenge") {
       if ('Counter' in qrData && 'Total' in qrData && qrData.Counter <= qrData.Total) {
         if (!scannedChallengesNumbers.includes(qrData.Counter)) {
@@ -104,14 +108,16 @@ const ScannerFunctions = () => {
     }
   }
 
+  // When User selects Challenge, show scanner
   const onChallenge = () => {
-    dispatch({ type: "SHOW_SCANNER" })
-    dispatch({type: "CHALLENGE_OR_CHASE", payload: "CHALLENGE"})
+    dispatch({ type: RAT.SHOW_SCANNER })
+    dispatch({ type: RAT.CHALLENGE_OR_CAST, payload: "CHALLENGE" })
   }
 
+  // When User selects Cast, hide scanner, Link to result in HTML
   const onCast = () => {
-    dispatch({type: "HIDE_SCANNER"})
-    dispatch({type: "CHALLENGE_OR_CHASE", payload: "CAST"})
+    dispatch({ type: RAT.HIDE_SCANNER })
+    dispatch({ type: RAT.CHALLENGE_OR_CAST, payload: "CAST" })
   }
 
   return (
@@ -123,7 +129,7 @@ const ScannerFunctions = () => {
           </div>}
           {!challengeScanned && commitmentScanned && <div style={{ margin: '10px' }}>
             <div>
-            Please scan the Challenge
+              Please scan the Challenge
             </div>
             <div>
               Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}

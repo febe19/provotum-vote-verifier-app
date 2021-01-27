@@ -6,6 +6,8 @@ export const getReceivedBallotHash = (state: any) => state?.receivedBallotHash ?
 
 export const getCalculatedBallotHash = (state: any) => state?.calculatedBallotHash ?? '';
 
+export const getVerificationResult = (state: any) => state?.verificationResult ?? false;
+
 export const getCommitmentScanned = (state: any) => state?.commitmentScanned ?? '';
 
 export const getChallengeScanned = (state: any) => state?.challengeScanned ?? '';
@@ -21,3 +23,4 @@ export const getTotalNrOfChallenges = (state: any) => state?.totalNrOfChallenges
 export const getShowScanner = (state: any) => state?.showScanner ?? false;
 
 export const getChallengeOrCast = (state: any) => state?.CoC ?? '';
+

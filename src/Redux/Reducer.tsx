@@ -1,5 +1,20 @@
 import BN from 'bn.js';
 
+// ReduxActionType (RAT) Definitions
+export enum RAT {
+    SCANNER_RESULT = "SCANNED_RESULT",
+    ADD_COMMITMENT_DATA = "ADD_COMMITMENT_DATA",
+    ADD_CHALLENGE_DATA = "ADD_CHALLENGE_DATA",
+    COMMITMENT_SCANNED = "COMMITMENT_SCANNED",
+    CHALLENGE_SCANNED = "CHALLENGE_SCANNED",
+    SHOW_SCANNER = "SHOW_SCANNER",
+    HIDE_SCANNER = "HIDE_SCANNER",
+    RESET = "RESET",
+    CHALLENGE_OR_CAST = "CHALLENGE_OR_CAST",
+    CALCULATED_BALLOT_HASH = "CALCULATED_BALLOT_HASH",
+}
+
+//Redux State Type-Definition
 export type State = {
     showScanner: Boolean,
     commitmentScanned: Boolean,
@@ -10,9 +25,11 @@ export type State = {
     totalNrOfChallenges: Number,
     votingQuestions: Array<any>,
     CoC: String,
-    result: String
+    result: String,
+    verificationResult: Boolean
 }
 
+// Redux Initial State definition
 const initState: State = {
     showScanner: true,
     commitmentScanned: false,
@@ -20,32 +37,55 @@ const initState: State = {
     receivedBallotHash: '',
     calculatedBallotHash: '',
     scannedChallengesNumbers: [],
-    totalNrOfChallenges: 0,
+    totalNrOfChallenges: 1,
     votingQuestions: [],
     CoC: '',
-    result: ''
+    result: '',
+    verificationResult: false
 };
 
 
 function Reducer(state: any = initState, action: any) {
-    if (action.type != "SCANNER_RESULT") { //TODO: REmove
+    if (action.type != "SCANNER_RESULT") { //TODO: Remove
         console.log("Reducer: ", action)
     }
+
     switch (action.type) {
-        case "SCANNER_RESULT": {
+        case RAT.SCANNER_RESULT: {
             return {
                 ...state,
                 result: action.payload
             }
         };
-        case "ADD_COMMITMENT_DATA":
-            var vQ: Array<any> = []
+        case RAT.COMMITMENT_SCANNED:
+            return {
+                ...state,
+                commitmentScanned: true,
+            };
+        case RAT.CHALLENGE_SCANNED:
+            return {
+                ...state,
+                challengeScanned: true,
+            };
+        case RAT.SHOW_SCANNER:
+            return {
+                ...state,
+                showScanner: true,
+            };
+        case RAT.HIDE_SCANNER:
+            return {
+                ...state,
+                showScanner: false,
+            };
+        case RAT.CHALLENGE_OR_CAST:
+            return {
+                ...state,
+                CoC: action.payload,
+            }
+        case RAT.ADD_COMMITMENT_DATA:
+            // Add thequestion to a field 'Question' instead of directly to the key
             Object.entries(action.payload.VotingQuestions).forEach(([key, value]: any) => {
                 action.payload.VotingQuestions[key] = { Question: value }
-            })
-
-            Object.entries(action.payload.VotingQuestions).forEach(([key, value]: any) => {
-                console.log("Key: ", key, " --> ", value)
             })
 
             return {
@@ -53,7 +93,8 @@ function Reducer(state: any = initState, action: any) {
                 receivedBallotHash: action.payload.BH,
                 votingQuestions: action.payload.VotingQuestions
             };
-        case "ADD_CHALLENGE_DATA":
+        case RAT.ADD_CHALLENGE_DATA:
+            // Add non-General Data (actual Voting Question data) to the state and return it
             if (action.payload.Key != "GeneralData") {
                 var key = action.payload.Key
                 state.votingQuestions[key] = {
@@ -72,9 +113,7 @@ function Reducer(state: any = initState, action: any) {
             }
 
             if (action.payload.Key == 'GeneralData') {
-                //console.log("Action PBK: ", action.payload.publicKey)
-                //console.log("OBJ PBK: ", objWithHexStrToBn(action.payload.publicKey))
-                
+                // Add General Data (Public Key)
                 return {
                     ...state,
                     publicKey: objWithHexStrToBn(action.payload.publicKey),
@@ -87,44 +126,20 @@ function Reducer(state: any = initState, action: any) {
             return {
                 ...state
             }
-        case "COMMITMENT_SCANNED":
+        case RAT.CALCULATED_BALLOT_HASH:
             return {
                 ...state,
-                commitmentScanned: true,
-            };
-        case "CHALLENGE_SCANNED":
-            return {
-                ...state,
-                challengeScanned: true,
-            };
-        case "SHOW_SCANNER":
-            return {
-                ...state,
-                showScanner: true,
-            };
-        case "HIDE_SCANNER":
-            return {
-                ...state,
-                showScanner: false,
-            };
-        case "START_UP":
+                calculatedBallotHash: action.payload.hash,
+                verificationResult: action.payload.verificationResult
+            }
+        case RAT.RESET:
             return initState;
-        case "CHALLENGE_OR_CHASE":
-            return {
-                ...state,
-                CoC: action.payload,
-            }
-        case "CALCULATED_BALLOT_HASH":
-            return {
-                ...state,
-                calculatedBallotHash: action.payload,
-            }
         default:
             return initState;
     }
 }
 
-//This parses an obj to a BN recursively with the according keys used already. Inspired by A.Hoffmann
+// This parses an obj to a BN recursively with the according keys used already. Inspired by A.Hoffmann
 const objWithHexStrToBn = (obj: any) => {
     if (obj === undefined) {
         return

@@ -4,6 +4,9 @@ import { bnToHex, hexToBn, u8aToHex } from '@polkadot/util';
 import { Link } from 'react-router-dom'
 import BN from 'bn.js';
 import * as crypto from "crypto-js";
+import {
+  RAT
+} from '../Redux/Reducer'
 
 import {
   getChallengeOrCast,
@@ -12,6 +15,7 @@ import {
   getVotingQuestions,
   getPublicKey,
   getVoterPublicKeyH,
+  getVerificationResult,
 } from '../Redux/Selector'
 
 import {
@@ -20,26 +24,20 @@ import {
   ElGamalPublicKey,
 } from '@hoal/evote-crypto-ts'
 
+// Actual Encryption of the data. 
 function CreateEncryptedBallot(votingQuestions: Array<any>, publicKey: ElGamalPublicKey, voterPublicKeyH: BN) {
-  console.log("start Create")
-  var allVerified: any = null
+    var allVerified: any = null
   var verifies: Boolean = false
-
-  console.log("Votes: ", votingQuestions)
 
   const encryptedBallots: Array<any> = []
 
   Object.entries(votingQuestions).forEach(([key, value]) => {
-    console.log("-----Start for key: ", key)
     if (value.answerBin === undefined) {
-      console.log("-----End for key: ", key, " due to no answer given")
       return
     }
     const encryptedVote: Array<any> = []
 
     const encryptedBallot = encrypt(value.answerBin, publicKey, value.nonce);
-
-    console.log("Encryption Done for: ", value)
 
     var verifies = verifyReEncryptionProof(
       value.reEncryptionProof,
@@ -49,6 +47,7 @@ function CreateEncryptedBallot(votingQuestions: Array<any>, publicKey: ElGamalPu
       voterPublicKeyH,
     );
 
+    // Check if all previos ballots and current verify. if one does not verify return false in the end. 
     allVerified = allVerified !== null ? (verifies && allVerified ? (true) : (false)) : (verifies)
 
     const cipherToSubstrate = {
@@ -56,51 +55,45 @@ function CreateEncryptedBallot(votingQuestions: Array<any>, publicKey: ElGamalPu
       d: bnToHex(value.reEncryptedBallot.d),
     };
 
+    // Push to arrays for hashing 
     encryptedVote.push(key);
     encryptedVote.push(cipherToSubstrate);
-
-
     encryptedBallots.push(encryptedVote)
-    console.log("-----End for key: ", key)
   })
-
-
-  console.log("encryptedBallots JSON: ", JSON.stringify(encryptedBallots))
 
   verifies = allVerified !== null ? (allVerified) : (false)
   return [encryptedBallots, verifies]
-
 }
 
 
 const Result = () => {
 
-  // REDUX Stuff
+  // REDUX Definitions
   const dispatch = useDispatch()
   const receivedBallotHash = useSelector(getReceivedBallotHash);
   const calculatedBallotHash = useSelector(getCalculatedBallotHash);
   const challengeOrCast = useSelector(getChallengeOrCast);
-  const votingQuestions: Array<any> = useSelector(getVotingQuestions)
-  const publicKey: ElGamalPublicKey = useSelector(getPublicKey)
-  const voterPublicKeyH: BN = useSelector(getVoterPublicKeyH)
+  const votingQuestions: Array<any> = useSelector(getVotingQuestions);
+  const publicKey: ElGamalPublicKey = useSelector(getPublicKey);
+  const voterPublicKeyH: BN = useSelector(getVoterPublicKeyH);
+  const verificationResult: Boolean = useSelector(getVerificationResult);
   var encryptionResult: Array<any> = []
 
+  // Encrypt the ballots wiht the received data and dispatch it to the Redux Store
   useEffect(() => {
-    console.log("RESULT - UseEffect")
     encryptionResult = CreateEncryptedBallot(votingQuestions, publicKey, voterPublicKeyH);
     console.log("Encrypted Ballots:", encryptionResult[0])
     console.log("All Verified:", encryptionResult[1])
-
-    dispatch({
-      type: "CALCULATED_BALLOT_HASH",
-      payload: crypto.SHA256(JSON.stringify(encryptionResult[0])).toString()
-    })
     console.log("CalculatedBallotHash: ", crypto.SHA256(JSON.stringify(encryptionResult[0])).toString())
 
-
+    dispatch({
+      type: RAT.CALCULATED_BALLOT_HASH,
+      payload: {
+        hash: crypto.SHA256(JSON.stringify(encryptionResult[0])).toString(),
+        verificationResult: encryptionResult[1]
+      }
+    })
   }, [])
-
-  
 
   return (
     <div>
@@ -123,6 +116,7 @@ const Result = () => {
         <div>
           <div>RH -- {receivedBallotHash}</div>
           <div>CH -- {calculatedBallotHash}</div>
+          <div>Verification Result is: {verificationResult.toString()}</div>
         </div>
       }
 
