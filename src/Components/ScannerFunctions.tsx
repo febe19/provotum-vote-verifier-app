@@ -123,7 +123,7 @@ const ScannerFunctions = () => {
 
   return (
     <div>
-      <div style={{ margin: '30px' }}>
+      <div style={{ marginLeft: '30px' }}>
         {showScanner &&
           <div>
             {!commitmentScanned && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -143,8 +143,8 @@ const ScannerFunctions = () => {
       </div>
       {commitmentScanned && !showScanner && !challengeScanned && <div>
         <h1>Commitment scann successful</h1>
-        <p style={{ margin: '30px' }}>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
-        <p style={{ margin: '30px' }}>Ballot Hash: {receivedBallotHash}</p>
+        <p style={{ marginLeft: '30px' }}>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
+        <p style={{ marginLeft: '30px' }}>Ballot Hash: {receivedBallotHash}</p>
         
         <div className="buttonDiv">
           <div className="buttonStyle">
@@ -160,7 +160,7 @@ const ScannerFunctions = () => {
 
       {commitmentScanned && challengeScanned &&
         <div>
-          <p style={{ margin: '30px' }}>You scanned the challenge. Continue with 'view challenge'</p>
+          <p style={{ marginLeft: '30px' }}>You scanned the challenge. Continue with 'view challenge'</p>
           <div className="buttonDiv">
             <div className="buttonStyle">
               <Link to='/result' style={{ textDecoration: 'none' }}>

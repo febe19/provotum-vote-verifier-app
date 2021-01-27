@@ -116,9 +116,18 @@ const Result = () => {
 
         {challengeOrCast == "CHALLENGE" &&
           <div>
-            <div>RH -- {receivedBallotHash}</div>
-            <div>CH -- {calculatedBallotHash}</div>
-            <div>Verification Result is: {verificationResult.toString()}</div>
+            {calculatedBallotHash === '' &&
+              <div>
+                <div className="lds-dual-ring"></div>
+              </div>
+            }
+            {calculatedBallotHash !== '' &&
+              <div>
+                <div>RH -- {receivedBallotHash}</div>
+                <div>CH -- {calculatedBallotHash}</div>
+                <div>Verification Result is: {verificationResult.toString()}</div>
+              </div>
+            }
           </div>
         }
 
