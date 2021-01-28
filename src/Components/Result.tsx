@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom'
 import BN from 'bn.js';
 import * as crypto from "crypto-js";
+import { Hashicon } from '@emeraldpay/hashicon-react';
 import {
   RAT
 } from '../Redux/Reducer'
@@ -123,10 +124,11 @@ const Result = () => {
               </div>
             }
             {calculatedBallotHash !== '' &&
-              <div>
+              <div className="hashDiv">
                 <p>RH -- {receivedBallotHash}</p>
                 <p>CH -- {calculatedBallotHash}</p>
                 <p>Verification Result is: {verificationResult.toString()}</p>
+                <Hashicon value={calculatedBallotHash}/>
               </div>
             }
           </div>

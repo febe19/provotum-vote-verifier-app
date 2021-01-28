@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux"
 import Button from '@material-ui/core/Button';
+import QRScanner from './QRScanner'
 import {
   getReceivedBallotHash,
   getCommitmentScanned,
@@ -16,8 +17,8 @@ import {
   RAT
 } from '../Redux/Reducer'
 
-const ScannerFunctions = () => {
-  console.log("ScannerFunctions Rendered")
+const Scanner = () => {
+  console.log("Scanner Ready")
 
   //REDUX definitions
   const dispatch = useDispatch()
@@ -123,26 +124,28 @@ const ScannerFunctions = () => {
 
   return (
     <div>
-      <div>
-        {showScanner &&
-          <div>
-            {!commitmentScanned && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <p>Please scan the commitment displayed on the voting device</p>
-            </div>}
-            {!challengeScanned && commitmentScanned && <div>
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <p>Please scan the Challenge displayed on the voting device</p>
-                <p>Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}</p>
-              </div>
-            </div>}
-          </div>
-        }
 
-      </div>
+      {showScanner &&
+        <div>
+          {!commitmentScanned && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <p>Please scan the commitment displayed on the voting device</p>
+          </div>}
+          {!challengeScanned && commitmentScanned && <div>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <p>Please scan the Challenge displayed on the voting device</p>
+              <p>Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}</p>
+            </div>
+          </div>}
+        </div>
+      }
+
+
       {commitmentScanned && !showScanner && !challengeScanned && <div>
         <h1>Commitment scann successful</h1>
         <p>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
-        <p>Ballot Hash: {receivedBallotHash}</p>
+        <div className="hashDiv">
+          <p>Ballot Hash: {receivedBallotHash}</p>
+        </div>
 
         <div className="buttonDiv">
           <div className="buttonStyle">
@@ -154,7 +157,8 @@ const ScannerFunctions = () => {
             <Button onClick={onChallenge} variant="contained" color="primary" fullWidth={true}>Challenge</Button>
           </div>
         </div>
-      </div>}
+      </div>
+      }
 
       {commitmentScanned && challengeScanned &&
         <div>
@@ -166,11 +170,17 @@ const ScannerFunctions = () => {
               </Link>
             </div>
           </div>
-        </div>}
+        </div>
+      }
 
+      {showScanner &&
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <QRScanner />
+        </div>
+      }
 
     </div>
   )
 }
 
-export default ScannerFunctions;
+export default Scanner;

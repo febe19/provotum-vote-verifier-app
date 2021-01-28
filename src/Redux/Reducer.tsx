@@ -90,7 +90,7 @@ function Reducer(state: any = initState, action: any) {
 
             return {
                 ...state,
-                receivedBallotHash: action.payload.BH,
+                receivedBallotHash: action.payload.BH.match(/.{1,2}/g).join(' '),
                 votingQuestions: action.payload.VotingQuestions
             };
         case RAT.ADD_CHALLENGE_DATA:
@@ -129,7 +129,7 @@ function Reducer(state: any = initState, action: any) {
         case RAT.CALCULATED_BALLOT_HASH:
             return {
                 ...state,
-                calculatedBallotHash: action.payload.hash,
+                calculatedBallotHash: action.payload.hash.match(/.{1,2}/g).join(' '),
                 verificationResult: action.payload.verificationResult
             }
         case RAT.RESET:
