@@ -85,3 +85,14 @@
       transform: rotate(360deg);
     }
   }
+
+  h1 {
+    margin: 30px;
+  }
+
+  p {
+    margin-left: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 30px;
+  }

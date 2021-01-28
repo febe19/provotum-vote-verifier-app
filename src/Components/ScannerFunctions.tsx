@@ -123,18 +123,16 @@ const ScannerFunctions = () => {
 
   return (
     <div>
-      <div style={{ marginLeft: '30px' }}>
+      <div>
         {showScanner &&
           <div>
             {!commitmentScanned && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              Please scan the commitment displayed on the voting device
-          </div>}
+              <p>Please scan the commitment displayed on the voting device</p>
+            </div>}
             {!challengeScanned && commitmentScanned && <div>
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                Please scan the Challenge displayed on the voting device
-            </div>
-              <div>
-                Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}
+                <p>Please scan the Challenge displayed on the voting device</p>
+                <p>Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}</p>
               </div>
             </div>}
           </div>
@@ -143,9 +141,9 @@ const ScannerFunctions = () => {
       </div>
       {commitmentScanned && !showScanner && !challengeScanned && <div>
         <h1>Commitment scann successful</h1>
-        <p style={{ marginLeft: '30px' }}>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
-        <p style={{ marginLeft: '30px' }}>Ballot Hash: {receivedBallotHash}</p>
-        
+        <p>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
+        <p>Ballot Hash: {receivedBallotHash}</p>
+
         <div className="buttonDiv">
           <div className="buttonStyle">
             <Link onClick={onCast} to='/result' style={{ textDecoration: 'none' }}>
@@ -160,7 +158,7 @@ const ScannerFunctions = () => {
 
       {commitmentScanned && challengeScanned &&
         <div>
-          <p style={{ marginLeft: '30px' }}>You scanned the challenge. Continue with 'view challenge'</p>
+          <p>You scanned the challenge. Continue with 'view challenge'</p>
           <div className="buttonDiv">
             <div className="buttonStyle">
               <Link to='/result' style={{ textDecoration: 'none' }}>

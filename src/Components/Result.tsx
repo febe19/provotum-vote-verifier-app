@@ -103,7 +103,7 @@ const Result = () => {
 
         {challengeOrCast == "CAST" &&
           <div>
-            <p>Your seelcted cast. Therefore, also select cast on the voting machine</p>
+            <p>Your selcted cast. Therefore, also select cast on the voting machine</p>
           </div>
         }
 
@@ -124,9 +124,9 @@ const Result = () => {
             }
             {calculatedBallotHash !== '' &&
               <div>
-                <div>RH -- {receivedBallotHash}</div>
-                <div>CH -- {calculatedBallotHash}</div>
-                <div>Verification Result is: {verificationResult.toString()}</div>
+                <p>RH -- {receivedBallotHash}</p>
+                <p>CH -- {calculatedBallotHash}</p>
+                <p>Verification Result is: {verificationResult.toString()}</p>
               </div>
             }
           </div>
