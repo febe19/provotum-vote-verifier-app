@@ -4,6 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import HelpIcon from '@material-ui/icons/Help'
 import logo from './../pv-logo-light-diamond.svg';
 import { Link } from "react-router-dom";
 
@@ -18,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    userSelect: "none"
   },
   image: {
     widht: '60px',
@@ -25,8 +27,11 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     paddingLeft: '1px'
+  },
+  rightToolbar: {
+    marginLeft: "auto",
+    marginRight: "-12px"
   }
-
 }));
 
 export default function ButtonAppBar() {
@@ -41,9 +46,14 @@ export default function ButtonAppBar() {
               <img src={logo} className={classes.image} alt="My logo" />
             </IconButton>
           </Link>
-          <Typography variant="h6" className={classes.title}>
-            Provotum Vote Verifier 
+          <Typography variant="h6" className={classes.title} >
+            Provotum Vote Verifier
           </Typography>
+          <section className={classes.rightToolbar}>
+            <IconButton color="inherit" >
+              <HelpIcon fontSize="large"/>
+            </IconButton>
+          </section>
         </Toolbar>
       </AppBar>
     </div>
