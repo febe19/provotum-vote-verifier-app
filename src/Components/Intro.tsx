@@ -13,7 +13,7 @@ const Intro = () => {
 
     return (
         <div>
-            <div style={{ margin: '30px' }}>
+            <div>
                 <h1>Welcome</h1>
                 <p>This application is used for the vote verification in the provotum environment.</p>
                 <p>To verify your vote follow the steps below:</p>

@@ -15,7 +15,7 @@ const ScannerComponent = () => {
             <div>
                 <ScannerFunctions />
             </div>
-            <div style={{ margin: '30px' }}>
+            <div>
                 {showScanner &&
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <QRScanner />

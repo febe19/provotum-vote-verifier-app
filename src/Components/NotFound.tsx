@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 const NotFound = () => {
     return (
         <div>
-            <div style={{ margin: '30px' }}>
+            <div>
                 <h1>404</h1>
                 <p>This site was unfortunately not found</p>
             </div >

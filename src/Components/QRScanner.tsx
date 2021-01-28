@@ -36,7 +36,7 @@ function useWindowDimensions() {
 const QRScanner = () => {
     console.log("QRScanner Rendered")
     const { height, width } = useWindowDimensions();
-    var sizeUsed = width * 0.9 > height * 0.9 ? height * 0.9 : width * 0.9
+    var sizeUsed: number = Math.round((width-100) * 0.9 > (height-100) * 0.9 ? (height-100) * 0.9 : (width-100) * 0.9);
     const dispatch = useDispatch()
 
     const handleScan = (result: any) => {
@@ -51,15 +51,13 @@ const QRScanner = () => {
 
     return (
 
-        <div className="qrScannerContainer" style={{ maxHeight: (sizeUsed - 40), maxWidth: (sizeUsed - 20) }}>
+        <div className="qrScannerContainer" style={{ maxHeight: sizeUsed, maxWidth: sizeUsed }}>
             <div className="loaderPosition">
                 <div className="lds-dual-ring" />
                 <div className="loaderText">loading camera...</div>
             </div>
             <div className="svgClass" >
-                <svg viewBox={"0 0 630 630"}>
-                    <CameraFocusWhite />
-                </svg>
+                <CameraFocusWhite />
             </div>
             <QrReader
                 delay={200}

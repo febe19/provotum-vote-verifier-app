@@ -98,7 +98,7 @@ const Result = () => {
 
   return (
     <div>
-      <div style={{ margin: '30px' }}>
+      <div>
         <h1>Result</h1>
 
         {challengeOrCast == "CAST" &&
@@ -117,8 +117,9 @@ const Result = () => {
         {challengeOrCast == "CHALLENGE" &&
           <div>
             {calculatedBallotHash === '' &&
-              <div>
-                <div className="lds-dual-ring"></div>
+              <div className="loaderPosition">
+                <div className="lds-dual-ring" />
+                <div className="loaderText">calculating result...</div>
               </div>
             }
             {calculatedBallotHash !== '' &&
