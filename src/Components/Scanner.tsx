@@ -183,7 +183,7 @@ const Scanner = () => {
         {showScanner && !commitmentScanned &&
           <div className="Item">
             <div className="centerHorizontally">
-              <h1>Scan Commitment</h1>
+              <h1 style={{marginBottom: "2%"}}>Scan Commitment</h1>
             </div>
           </div>
         }

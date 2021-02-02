@@ -12,9 +12,9 @@ p {
   margin: 0.5% 0;
 }
 
-.qrScannerContainer{
+.qrScannerContainer {
   height: 100%;
-  width: 100%; 
+  width: 100%;
   position: relative;
   border-radius: 5%;
   overflow: hidden;
@@ -30,10 +30,10 @@ p {
 }
 
 .loaderPosition {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
 }
 
 .buttonDivPosition {
@@ -43,7 +43,7 @@ p {
 }
 
 .centerHorizontally {
-  display: flex; 
+  display: flex;
   justify-Content: center;
   align-Items: center;
 }
@@ -61,14 +61,14 @@ p {
 }
 
 .buttonStyle {
-    -webkit-box-flex: 1 1 auto;
-    -moz-box-flex:  1 1 auto;
-    -webkit-flex:  1 1 auto;
-    -ms-flex:  1 1 auto;
-    flex:  1 1 auto;
-    flex-basis: auto;
-    width: 100%;
-    margin: 0 0.5%;
+  -webkit-box-flex: 1 1 auto;
+  -moz-box-flex: 1 1 auto;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  flex-basis: auto;
+  width: 100%;
+  margin: 0 0.5%;
 }
 
 .cardDiv {
@@ -95,7 +95,7 @@ p {
 }
 
 .ScannerFlexBox .Scanner {
-  flex: 1;  
+  flex: 1;
   align-self: stretch;
   overflow: hidden;
   margin: 0.5% 3%;
@@ -106,40 +106,120 @@ p {
 }
 
 .loaderText {
-      position: absolute;
-      width: 200px;
-      height: 100px;
-      top: 10px;
-      left: -100px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #3f51b5;
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  top: 10px;
+  left: -100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #3f51b5;
+}
+
+.lds-dual-ring {
+  display: inline-block;
+  position: absolute;
+  left: -40px;
+  top: -40px;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 6px solid #3f51b5;
+  border-color: #3f51b5 transparent #3f51b5 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  .lds-dual-ring {
-      display: inline-block;
-      position: absolute;
-      left: -40px;
-      top: -40px;
-      width: 80px;
-      height: 80px;
-    }
-    .lds-dual-ring:after {
-      content: " ";
-      display: block;
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      border: 6px solid #3f51b5;
-      border-color: #3f51b5 transparent #3f51b5 transparent;
-      animation: lds-dual-ring 1.2s linear infinite;
-    }
-    @keyframes lds-dual-ring {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.resultSVG {
+  display: block;
+  margin: 10px auto 0;
+}
+
+.pathCircle {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 0;
+  -webkit-animation: dash .9s ease-in-out;
+  animation: dash .9s ease-in-out;
+}
+
+.pathLine {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 0;
+  stroke-dashoffset: 1000;
+  -webkit-animation: dash .9s .35s ease-in-out forwards;
+  animation: dash .9s .35s ease-in-out forwards;
+}
+
+.pathCheck {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 0;
+  stroke-dashoffset: -100;
+  -webkit-animation: dash-check .9s .35s ease-in-out forwards;
+  animation: dash-check .9s .35s ease-in-out forwards;
+}
+
+.resultSuccess {
+  text-align: center;
+  margin: 20px 0 20px;
+  font-size: 1.25em;
+  color:#73AF55;
+}
+
+.resultError {
+  text-align: center;
+  margin: 20px 0 20px;
+  font-size: 1.25em;
+  color:#ba0000;
+}
+
+@-webkit-keyframes dash {
+  0% {
+    stroke-dashoffset: 1000;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 1000;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@-webkit-keyframes dash-check {
+  0% {
+    stroke-dashoffset: -100;
+  }
+  100% {
+    stroke-dashoffset: 900;
+  }
+}
+
+@keyframes dash-check {
+  0% {
+    stroke-dashoffset: -100;
+  }
+  100% {
+    stroke-dashoffset: 900;
+  }
+}
