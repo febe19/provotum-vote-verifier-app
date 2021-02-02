@@ -4,16 +4,18 @@ import Button from '@material-ui/core/Button';
 const NotFound = () => {
     return (
         <div>
-            <div>
-                <h1>404</h1>
-                <p>This site was unfortunately not found</p>
+            <div className="cardDiv">
+                <h1 className="centerHorizontally">404</h1>
+                <p className="centerHorizontally">This site was unfortunately not found</p>
             </div >
 
-            <div className="buttonDiv">
-                <div className="buttonStyle">
-                    <Link to="/" style={{ textDecoration: 'none' }}>
-                        <Button variant="contained" color="primary" fullWidth={true}>Back to Homescreen</Button>
-                    </Link>
+            <div className="buttonDivPosition">
+                <div className="buttonDiv">
+                    <div className="buttonStyle">
+                        <Link to="/" style={{ textDecoration: 'none' }}>
+                            <Button variant="contained" color="primary" fullWidth={true}>Back to Homescreen</Button>
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>

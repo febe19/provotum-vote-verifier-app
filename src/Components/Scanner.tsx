@@ -150,51 +150,36 @@ const Scanner = () => {
     <div>
       <div className="ScannerFlexBox" style={{ height: usableHeight, maxHeight: usableHeight }}>
 
-        {showScanner &&
-          <div className="Item">
-            <p>What to do</p>
-            {!commitmentScanned && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <p>Please scan the commitment displayed on the voting device</p>
-            </div>}
-            {!challengeScanned && commitmentScanned && <div>
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <p>Please scan the Challenge displayed on the voting device</p>
-                <p>Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}</p>
-              </div>
-            </div>}
-          </div>
-        }
-
-
-        {commitmentScanned && !showScanner && !challengeScanned && <div>
-          <div className="Item">
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-              <h1>Commitment scann successful</h1>
-              <p>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
-            </div>
-          </div>
-        </div>
-        }
-
-
-        {commitmentScanned && challengeScanned &&
-          <div className="Item">
-            <p>You scanned the challenge. Continue with 'view challenge'</p>
-          </div>
-        }
-
         {commitmentScanned &&
           <div className="Item">
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <p> Received Ballot Hash: {receivedBallotHash}</p>
-              <Hashicon value={receivedBallotHash} />
+            <div className="centerHorizontally">
+              <h1>Commitment scann successful</h1>
+              <p> Received Ballot Hash: </p>
+              <p>{receivedBallotHash}</p>
+              <div style={{}}>
+                <Hashicon value={receivedBallotHash} />
+              </div>
             </div>
           </div>
         }
+        {showScanner &&
+          <div className="Item">
+            {!commitmentScanned && <div className="centerHorizontally">
+              <p>Please scan the commitment displayed on the voting device</p>
+            </div>}
+            {!challengeScanned && commitmentScanned &&
+              <div className="centerHorizontally">
+                <h1>Progress</h1>
+                <p>Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}</p>
+              </div>
+            }
+          </div>
+        }
+
 
         {showScanner &&
           <div className="Scanner" ref={qrScannerRef}>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+            <div className="centerHorizontally" style={{ height: '100%' }}>
               <QRScanner />
             </div>
           </div>
@@ -202,7 +187,10 @@ const Scanner = () => {
       </div>
 
       {commitmentScanned && !showScanner && !challengeScanned &&
-        <div>
+        <div className="buttonDivPosition">
+          <div className="centerHorizontally">
+            <p>You scanned the commitment, continue with 'cast' or 'challenge'</p>
+          </div>
           <div className="buttonDiv">
             <div className="buttonStyle">
               <Link onClick={onCast} to='/result' style={{ textDecoration: 'none' }}>
@@ -217,11 +205,17 @@ const Scanner = () => {
       }
 
       {commitmentScanned && challengeScanned &&
-        <div className="buttonDiv">
-          <div className="buttonStyle">
-            <Link to='/result' style={{ textDecoration: 'none' }}>
-              <Button variant="contained" color="primary" fullWidth={true}>View Challenge</Button>
-            </Link>
+        <div className="buttonDivPosition">
+          <div className="centerHorizontally">
+            <p>You scanned the challenge. Continue with 'view challenge'</p>
+          </div>
+
+          <div className="buttonDiv">
+            <div className="buttonStyle">
+              <Link to='/result' style={{ textDecoration: 'none' }}>
+                <Button variant="contained" color="primary" fullWidth={true}>View Challenge</Button>
+              </Link>
+            </div>
           </div>
         </div>
       }

@@ -100,16 +100,17 @@ const Result = () => {
   return (
     <div>
       <div>
-        <h1>Result</h1>
 
         {challengeOrCast == "CAST" &&
-          <div>
+          <div className="cardDiv">
+            
             <p>Your selcted cast. Therefore, also select cast on the voting machine</p>
           </div>
         }
 
         {challengeOrCast != "CAST" && challengeOrCast != 'CHALLENGE' &&
-          <div>
+          <div className="cardDiv">
+            <h1>Error</h1>
             <p>You did not scan the commitment.</p>
             <p>Please go back to start and restart the verification</p>
           </div>
@@ -125,6 +126,7 @@ const Result = () => {
             }
             {calculatedBallotHash !== '' &&
               <div className="cardDiv">
+                <h1>Result</h1>
                 <p>RH -- {receivedBallotHash}</p>
                 <p>CH -- {calculatedBallotHash}</p>
                 <p>Verification Result is: {verificationResult.toString()}</p>

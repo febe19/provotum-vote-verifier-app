@@ -15,7 +15,7 @@ const Intro = () => {
 
     return (
         <div>
-            <div>
+            <div className="cardDiv">
                 <h1>Welcome</h1>
                 <p>This application is used for the vote verification in the provotum environment.</p>
                 <p>To verify your vote follow the steps below:</p>
@@ -24,11 +24,13 @@ const Intro = () => {
                     <li>Select "Verify" on the this device</li>
                 </ol>
             </div>
-            <div className="buttonDiv">
-                <div className="buttonStyle">
-                    <Link to="/scanner" style={{ textDecoration: 'none' }}>
-                        <Button variant="contained" color="primary" fullWidth={true}>Verify</Button>
-                    </Link>
+            <div className="buttonDivPosition">
+                <div className="buttonDiv">
+                    <div className="buttonStyle">
+                        <Link to="/scanner" style={{ textDecoration: 'none' }}>
+                            <Button variant="contained" color="primary" fullWidth={true}>Verify</Button>
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>
