@@ -5,7 +5,7 @@ import Result from './Components/Result';
 import Intro from './Components/Intro';
 import NotFound from './Components/NotFound';
 import { Route, Switch } from 'react-router-dom';
-import { useSelector, useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
 import {
   RAT
 } from './Redux/Reducer'
@@ -21,9 +21,7 @@ function App() {
 
   useEffect(() => {
     const resizeHandler = () => {
-      usableHeight = window.innerHeight - headerRef.current!.clientHeight;
-      console.log("Usable Height: ", usableHeight)
-  
+      usableHeight = window.innerHeight - headerRef.current!.clientHeight;  
       dispatch({
         type: RAT.WINDOWHEIGHT,
         payload: usableHeight

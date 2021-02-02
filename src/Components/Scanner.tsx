@@ -38,10 +38,8 @@ const Scanner = () => {
   var qrData = {}
 
   useEffect(() => {
-    console.log("Calculate Size of Scanner")
     const scannerResizeHandler = () => {
       if (showScanner) {
-        console.log("Scanner: ", qrScannerRef)
         var scannerSizeArray: Array<Number> = []
         scannerSizeArray[0] = qrScannerRef.current!.clientHeight
         scannerSizeArray[1] = qrScannerRef.current!.clientWidth
@@ -57,7 +55,7 @@ const Scanner = () => {
     return () => {
       window.removeEventListener('resize', scannerResizeHandler);
     }
-  }, [usableHeight])
+  }, [usableHeight, showScanner])
 
   useEffect(() => {
     // Try to parse the result to JSON format
@@ -170,8 +168,10 @@ const Scanner = () => {
 
         {commitmentScanned && !showScanner && !challengeScanned && <div>
           <div className="Item">
-            <h1>Commitment scann successful</h1>
-            <p>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+              <h1>Commitment scann successful</h1>
+              <p>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
+            </div>
           </div>
         </div>
         }
@@ -180,13 +180,6 @@ const Scanner = () => {
         {commitmentScanned && challengeScanned &&
           <div className="Item">
             <p>You scanned the challenge. Continue with 'view challenge'</p>
-            <div className="buttonDiv">
-              <div className="buttonStyle">
-                <Link to='/result' style={{ textDecoration: 'none' }}>
-                  <Button variant="contained" color="primary" fullWidth={true}>View Challenge</Button>
-                </Link>
-              </div>
-            </div>
           </div>
         }
 
@@ -219,6 +212,16 @@ const Scanner = () => {
             <div className="buttonStyle">
               <Button onClick={onChallenge} variant="contained" color="primary" fullWidth={true}>Challenge</Button>
             </div>
+          </div>
+        </div>
+      }
+
+      {commitmentScanned && challengeScanned &&
+        <div className="buttonDiv">
+          <div className="buttonStyle">
+            <Link to='/result' style={{ textDecoration: 'none' }}>
+              <Button variant="contained" color="primary" fullWidth={true}>View Challenge</Button>
+            </Link>
           </div>
         </div>
       }

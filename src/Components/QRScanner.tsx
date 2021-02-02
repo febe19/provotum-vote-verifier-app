@@ -1,7 +1,7 @@
 import BarcodeScannerComponent from "react-webcam-barcode-scanner"; //https://www.npmjs.com/package/react-webcam-barcode-scanner TODO: Eventually delete
 import { useSelector, useDispatch } from "react-redux"
 import './OverallCSS.css'
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import QrReader from "react-qr-reader"; // https://www.npmjs.com/package/@types/react-qr-reader
 import { ReactComponent as CameraFocusWhite } from './../CameraFocus.svg';
 import {
@@ -16,7 +16,6 @@ import {
 const QRScanner = () => {
     console.log("QRScanner Ready")
     const dispatch = useDispatch()
-
     const maxScannerHeight = useSelector(getMaxScannerHeight);
     const maxScannerWidth = useSelector(getMaxScannerWidth); 
 
