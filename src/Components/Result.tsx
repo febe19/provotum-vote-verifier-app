@@ -18,6 +18,7 @@ import {
   getPublicKey,
   getVoterPublicKeyH,
   getVerificationResult,
+  getHeight,
 } from '../Redux/Selector'
 
 import {
@@ -79,6 +80,7 @@ const Result = () => {
   const publicKey: ElGamalPublicKey = useSelector(getPublicKey);
   const voterPublicKeyH: BN = useSelector(getVoterPublicKeyH);
   const verificationResult: Boolean = useSelector(getVerificationResult);
+  const usableHeight = useSelector(getHeight)
   var encryptionResult: Array<any> = []
 
   // Encrypt the ballots wiht the received data and dispatch it to the Redux Store
@@ -103,7 +105,7 @@ const Result = () => {
 
         {challengeOrCast == "CAST" &&
           <div className="cardDiv">
-            
+
             <p>Your selcted cast. Therefore, also select cast on the voting machine</p>
           </div>
         }
@@ -127,24 +129,34 @@ const Result = () => {
             {calculatedBallotHash !== '' &&
               <div className="cardDiv">
                 <h1>Result</h1>
-                <p>RH -- {receivedBallotHash}</p>
-                <p>CH -- {calculatedBallotHash}</p>
-                <p>Verification Result is: {verificationResult.toString()}</p>
-                <Hashicon value={calculatedBallotHash}/>
+                <h3>Received Hash</h3>
+                <p>{receivedBallotHash}</p>
+                <div className="centerHorizontally">
+                  <Hashicon value={receivedBallotHash} size={usableHeight / 10} />
+                </div>
+                <h3>Calculated Hash</h3>
+                <p>{calculatedBallotHash}</p>
+                <div className="centerHorizontally">
+                  <Hashicon value={calculatedBallotHash} size={usableHeight / 10} />
+                </div>
+                <h3>Verification Result</h3>
+                <p>{verificationResult.toString()}</p>
               </div>
             }
           </div>
         }
 
       </div>
-      <div className="buttonDiv">
-        <div className="buttonStyle">
-          <Link to="/" style={{ textDecoration: 'none' }}>
-            <Button variant="contained" color="primary" fullWidth={true}>Back to Start</Button>
-          </Link>
+      <div className="buttonDivPosition">
+        <div className="buttonDiv">
+          <div className="buttonStyle">
+            <Link to="/" style={{ textDecoration: 'none' }}>
+              <Button variant="contained" color="primary" fullWidth={true}>Back to Start</Button>
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 

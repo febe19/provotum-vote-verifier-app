@@ -1,3 +1,17 @@
+h1 {
+  margin: 2% auto;
+  margin-bottom: 4%;
+}
+
+h3 {
+  margin: 4% auto;
+  margin-bottom: 0;
+}
+
+p {
+  margin: 0.5% 0;
+}
+
 .qrScannerContainer{
   height: 100%;
   width: 100%; 
@@ -87,6 +101,9 @@
   margin: 0.5% 3%;
 }
 
+.hashIconDiv {
+  margin: 2%;
+}
 
 .loaderText {
       position: absolute;

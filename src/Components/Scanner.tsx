@@ -150,36 +150,57 @@ const Scanner = () => {
     <div>
       <div className="ScannerFlexBox" style={{ height: usableHeight, maxHeight: usableHeight }}>
 
-        {commitmentScanned &&
+        {commitmentScanned && !challengeScanned &&
           <div className="Item">
-            <div className="centerHorizontally">
-              <h1>Commitment scann successful</h1>
-              <p> Received Ballot Hash: </p>
+            <div>
+              <h1 className="centerHorizontally">Commitment scan successful</h1>
+              <h3> Received Ballot Hash: </h3>
               <p>{receivedBallotHash}</p>
-              <div style={{}}>
-                <Hashicon value={receivedBallotHash} />
+              <div className="centerHorizontally">
+              <div className="hashIconDiv">
+                  <Hashicon value={receivedBallotHash} size={usableHeight / 10} />
+                </div>
               </div>
             </div>
           </div>
         }
-        {showScanner &&
+
+        {commitmentScanned && challengeScanned &&
           <div className="Item">
-            {!commitmentScanned && <div className="centerHorizontally">
-              <p>Please scan the commitment displayed on the voting device</p>
-            </div>}
-            {!challengeScanned && commitmentScanned &&
+            <div>
+              <h1 className="centerHorizontally">Challenge scan successful</h1>
+              <h3> Received Ballot Hash: </h3>
+              <p>{receivedBallotHash}</p>
               <div className="centerHorizontally">
-                <h1>Progress</h1>
-                <p>Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}</p>
+                <div className="hashIconDiv">
+                  <Hashicon value={receivedBallotHash} size={usableHeight / 10} />
+                </div>
               </div>
-            }
+            </div>
+          </div>
+        }
+
+        {showScanner && !commitmentScanned &&
+          <div className="Item">
+            <div className="centerHorizontally">
+              <h1>Scan Commitment</h1>
+            </div>
+          </div>
+        }
+
+        {showScanner && commitmentScanned && !challengeScanned &&
+          <div className="Item">
+            <div className="centerHorizontally">
+              <h1>Progress</h1>
+              <p>Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}</p>
+            </div>
           </div>
         }
 
 
         {showScanner &&
           <div className="Scanner" ref={qrScannerRef}>
-            <div className="centerHorizontally" style={{ height: '100%' }}>
+            <div className="centerHorizontally" style={{ height: '100%', alignItems: "flex-start" }}>
               <QRScanner />
             </div>
           </div>
