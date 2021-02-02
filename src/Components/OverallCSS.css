@@ -1,6 +1,6 @@
 .qrScannerContainer{
-    height: 90%;
-    width: 90%; 
+    height: 100%;
+    width: 100%; 
     position: relative;
     border-radius: 5%;
     overflow: hidden;
@@ -98,9 +98,37 @@
   }
 
 .cardDiv {
+  background-color: gold;
   border-radius: 25px;
   border: 2px solid #3f51b5;
   padding: 10px;
-  margin: 30px;
-  height: 100%;
+  margin: 3px 30px ;
+}
+
+.ScannerFlexBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  background-color: red;
+}
+
+.ScannerFlexBox .Item {
+  align-self: stretch;
+  background-color: gold;
+  border-radius: 25px;
+  border: 2px solid #3f51b5;
+  padding: 10px;
+  margin: 3px 30px ;
+}
+
+.ScannerFlexBox .Scanner {
+  flex: 1;  
+  align-self: stretch;
+  background: orange;
+  overflow: auto;
+  border-radius: 25px;
+  border: 2px solid #3f51b5;
+  padding: 10px;
+  margin: 3px 30px ;
 }

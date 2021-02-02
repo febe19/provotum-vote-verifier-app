@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux"
 import Button from '@material-ui/core/Button';
@@ -12,6 +12,7 @@ import {
   getScannedChallengesNumbers,
   getResult,
   getTotalNrOfChallenges,
+  getHeight,
 } from '../Redux/Selector';
 
 import {
@@ -20,6 +21,8 @@ import {
 
 const Scanner = () => {
   console.log("Scanner Ready")
+
+  const qrScannerContainerRef: any = useRef(null);
 
   //REDUX definitions
   const dispatch = useDispatch()
@@ -30,11 +33,19 @@ const Scanner = () => {
   const result = useSelector(getResult)
   const scannedChallengesNumbers = useSelector(getScannedChallengesNumbers)
   const totalNrOfChallenges = useSelector(getTotalNrOfChallenges)
+  const usableHeight = useSelector(getHeight)
 
   var qrData = {}
 
   useEffect(() => {
+    console.log("Scanner: ", qrScannerContainerRef)
+    dispatch({
+      type: RAT.MAXSCANNERHEIGHT,
+      payload: qrScannerContainerRef.current!.clientHeight
+    })
+  }, [])
 
+  useEffect(() => {
     // Try to parse the result to JSON format
     if (result !== null) {
       qrData = {};
@@ -125,67 +136,78 @@ const Scanner = () => {
 
   return (
     <div>
+      <div className="ScannerFlexBox" style={{ height: usableHeight, maxHeight: usableHeight }}>
 
-      {showScanner &&
-        <div className="cardDiv">
-          <p>What to do</p>
-          {!commitmentScanned && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <p>Please scan the commitment displayed on the voting device</p>
-          </div>}
-          {!challengeScanned && commitmentScanned && <div>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <p>Please scan the Challenge displayed on the voting device</p>
-              <p>Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}</p>
+        {showScanner &&
+          <div className="Item">
+            <p>What to do</p>
+            {!commitmentScanned && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <p>Please scan the commitment displayed on the voting device</p>
+            </div>}
+            {!challengeScanned && commitmentScanned && <div>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <p>Please scan the Challenge displayed on the voting device</p>
+                <p>Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}</p>
+              </div>
+            </div>}
+          </div>
+        }
+
+
+        {commitmentScanned && !showScanner && !challengeScanned && <div>
+          <div className="Item">
+            <h1>Commitment scann successful</h1>
+            <p>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
+          </div>
+        </div>
+        }
+
+
+        {commitmentScanned && challengeScanned &&
+          <div className="Item">
+            <p>You scanned the challenge. Continue with 'view challenge'</p>
+            <div className="buttonDiv">
+              <div className="buttonStyle">
+                <Link to='/result' style={{ textDecoration: 'none' }}>
+                  <Button variant="contained" color="primary" fullWidth={true}>View Challenge</Button>
+                </Link>
+              </div>
             </div>
-          </div>}
-        </div>
-      }
-
-
-      {commitmentScanned && !showScanner && !challengeScanned && <div>
-        <h1>Commitment scann successful</h1>
-        <p>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
-        <div className="buttonDiv">
-          <div className="buttonStyle">
-            <Link onClick={onCast} to='/result' style={{ textDecoration: 'none' }}>
-              <Button variant="contained" color="primary" fullWidth={true}>Cast</Button>
-            </Link>
           </div>
-          <div className="buttonStyle">
-            <Button onClick={onChallenge} variant="contained" color="primary" fullWidth={true}>Challenge</Button>
+        }
+
+        {commitmentScanned &&
+          <div className="Item">
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <p> Received Ballot Hash: {receivedBallotHash}</p>
+              <Hashicon value={receivedBallotHash} />
+            </div>
           </div>
-        </div>
+        }
+
+        {showScanner &&
+          <div className="Scanner" ref={qrScannerContainerRef}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+              <QRScanner />
+            </div>
+          </div>
+        }
       </div>
-      }
 
-
-      {commitmentScanned && challengeScanned &&
+      {commitmentScanned && !showScanner && !challengeScanned &&
         <div>
-          <p>You scanned the challenge. Continue with 'view challenge'</p>
           <div className="buttonDiv">
             <div className="buttonStyle">
-              <Link to='/result' style={{ textDecoration: 'none' }}>
-                <Button variant="contained" color="primary" fullWidth={true}>View Challenge</Button>
+              <Link onClick={onCast} to='/result' style={{ textDecoration: 'none' }}>
+                <Button variant="contained" color="primary" fullWidth={true}>Cast</Button>
               </Link>
+            </div>
+            <div className="buttonStyle">
+              <Button onClick={onChallenge} variant="contained" color="primary" fullWidth={true}>Challenge</Button>
             </div>
           </div>
         </div>
       }
-
-      {commitmentScanned &&
-        <div className="cardDiv">
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <p> Received Ballot Hash: {receivedBallotHash}</p>
-            <Hashicon value={receivedBallotHash} />
-          </div>
-        </div>
-      }
-      {showScanner &&
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <QRScanner />
-        </div>
-      }
-
     </div>
   )
 }

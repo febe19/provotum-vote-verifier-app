@@ -5,16 +5,45 @@ import Result from './Components/Result';
 import Intro from './Components/Intro';
 import NotFound from './Components/NotFound';
 import { Route, Switch } from 'react-router-dom';
+import { useSelector, useDispatch } from "react-redux"
+import {
+  RAT
+} from './Redux/Reducer'
 
 
 function App() {
+  const dispatch = useDispatch()
+  const headerRef: any = useRef(null);
+  const bodyRef: any = useRef(null);
+  var usableHeight: number = 0
+
+  console.log("App Ready")
+
+  useEffect(() => {
+    const resizeHandler = () => {
+      usableHeight = window.innerHeight - headerRef.current!.clientHeight;
+      console.log("Usable Height: ", usableHeight)
+  
+      dispatch({
+        type: RAT.WINDOWHEIGHT,
+        payload: usableHeight
+      })
+    }
+    resizeHandler()
+    window.addEventListener('resize', resizeHandler);
+
+    return () => {
+      window.removeEventListener('resize', resizeHandler);
+    }
+  }, [])
+    
   return (
     <main >
-      <div>
+      <div ref={headerRef}>
         <Header />
       </div>
 
-      <div>
+      <div ref={bodyRef}>
         <Switch>
           <Route path="/" component={Intro} exact />
           <Route path="/scanner" component={Scanner} />

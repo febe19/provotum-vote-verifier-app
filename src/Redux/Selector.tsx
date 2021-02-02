@@ -24,3 +24,9 @@ export const getShowScanner = (state: any) => state?.showScanner ?? false;
 
 export const getChallengeOrCast = (state: any) => state?.CoC ?? '';
 
+export const getHeight = (state: any) => state?.windowHeight ?? '';
+
+export const getMaxScannerHeight = (state: any) => state?.maxScannerHeight ?? '';
+
+
+

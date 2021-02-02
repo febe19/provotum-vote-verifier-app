@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import Button from '@material-ui/core/Button';
@@ -8,6 +9,7 @@ import {
 
 
 const Intro = () => {
+    console.log("Intro Ready");
     const dispatch = useDispatch()
     dispatch({ type: RAT.RESET });
 

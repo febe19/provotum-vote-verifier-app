@@ -1,43 +1,22 @@
 import BarcodeScannerComponent from "react-webcam-barcode-scanner"; //https://www.npmjs.com/package/react-webcam-barcode-scanner TODO: Eventually delete
-import { useDispatch } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import './OverallCSS.css'
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import QrReader from "react-qr-reader"; // https://www.npmjs.com/package/@types/react-qr-reader
 import { ReactComponent as CameraFocusWhite } from './../CameraFocus.svg';
 import {
     RAT
 } from '../Redux/Reducer'
-
-import { useState, useEffect } from 'react';
-
-function getWindowDimensions() {
-    const { innerWidth: width, innerHeight: height } = window;
-    return {
-        width,
-        height
-    };
-}
-
-function useWindowDimensions() {
-    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
-
-    useEffect(() => {
-        function handleResize() {
-            setWindowDimensions(getWindowDimensions());
-        }
-
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    return windowDimensions;
-}
+import {
+    getMaxScannerHeight
+} from '../Redux/Selector';
 
 const QRScanner = () => {
-    console.log("QRScanner Rendered")
-    const { height, width } = useWindowDimensions();
-    var sizeUsed: number = Math.round((width-100) * 0.9 > (height-100) * 0.9 ? (height-100) * 0.9 : (width-100) * 0.9);
+    const qrScannerContainerRef = useRef(null);
+    console.log("QRScanner Ready")
     const dispatch = useDispatch()
+
+    const maxScannerHeight = useSelector(getMaxScannerHeight);
 
     const handleScan = (result: any) => {
         if (result !== null) {
@@ -51,7 +30,7 @@ const QRScanner = () => {
 
     return (
 
-        <div className="qrScannerContainer" style={{ maxHeight: sizeUsed, maxWidth: sizeUsed }}>
+        <div className="qrScannerContainer" style={{maxHeight: maxScannerHeight, maxWidth: maxScannerHeight}}>
             <div className="loaderPosition">
                 <div className="lds-dual-ring" />
                 <div className="loaderText">loading camera...</div>
