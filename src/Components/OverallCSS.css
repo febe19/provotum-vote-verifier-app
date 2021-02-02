@@ -6,6 +6,7 @@ h1 {
 h3 {
   margin: 4% auto;
   margin-bottom: 0;
+  margin-left: 0;
 }
 
 p {
@@ -76,6 +77,13 @@ p {
   border: 2px solid #3f51b5;
   padding: 0.5%;
   margin: 0.5% 3%;
+}
+
+.cardDivSmall {
+  border-radius: 25px;
+  border: 2px solid #3f51b5;
+  padding: 0.5%;
+  margin: 0.5%;
 }
 
 .ScannerFlexBox {

@@ -129,17 +129,23 @@ const Result = () => {
             {calculatedBallotHash !== '' &&
               <div className="cardDiv">
                 <h1>Result</h1>
-                <h3>Received Hash</h3>
-                <p>{receivedBallotHash}</p>
-                <div className="centerHorizontally">
-                  <Hashicon value={receivedBallotHash} size={usableHeight / 10} />
+                <div className="centerHorizontally" style={{ alignItems: 'stretch' }}>
+                  <div className="cardDivSmall">
+                    <h3>Received Hash</h3>
+                    <p>{receivedBallotHash}</p>
+                    <div className="centerHorizontally" style={{margin: '2% auto'}}>
+                      <Hashicon value={receivedBallotHash} size={usableHeight / 10} />
+                    </div>
+                  </div>
+                  <div className="cardDivSmall">
+                    <h3>Calculated Hash</h3>
+                    <p>{calculatedBallotHash}</p>
+                    <div className="centerHorizontally" style={{margin: '2% auto'}}>
+                      <Hashicon  value={calculatedBallotHash} size={usableHeight / 10} />
+                    </div>
+                  </div>
                 </div>
-                <h3>Calculated Hash</h3>
-                <p>{calculatedBallotHash}</p>
-                <div className="centerHorizontally">
-                  <Hashicon value={calculatedBallotHash} size={usableHeight / 10} />
-                </div>
-                <h3>Verification Result</h3>
+                <h3>Encryption Result</h3>
                 {verificationResult &&
                   <div>
                     <div className="centerHorizontally">
@@ -151,7 +157,7 @@ const Result = () => {
                       </div>
                     </div>
                     <div className="centerHorizontally">
-                      <p className="resultSuccess">Device trustworthy</p>
+                      <p className="resultSuccess">Encryption Similar</p>
                     </div>
                   </div>
                 }
@@ -167,7 +173,7 @@ const Result = () => {
                       </div>
                     </div>
                     <div className="centerHorizontally">
-                      <p className="resultError">Device NOT trustworthy</p>
+                      <p className="resultError">Encryption NOT Similar</p>
                     </div>
                   </div>
                 }
