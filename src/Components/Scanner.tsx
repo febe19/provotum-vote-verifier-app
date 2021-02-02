@@ -22,7 +22,7 @@ import {
 const Scanner = () => {
   console.log("Scanner Ready")
 
-  const qrScannerContainerRef: any = useRef(null);
+  const qrScannerRef: any = useRef(null);
 
   //REDUX definitions
   const dispatch = useDispatch()
@@ -38,12 +38,26 @@ const Scanner = () => {
   var qrData = {}
 
   useEffect(() => {
-    console.log("Scanner: ", qrScannerContainerRef)
-    dispatch({
-      type: RAT.MAXSCANNERHEIGHT,
-      payload: qrScannerContainerRef.current!.clientHeight
-    })
-  }, [])
+    console.log("Calculate Size of Scanner")
+    const scannerResizeHandler = () => {
+      if (showScanner) {
+        console.log("Scanner: ", qrScannerRef)
+        var scannerSizeArray: Array<Number> = []
+        scannerSizeArray[0] = qrScannerRef.current!.clientHeight
+        scannerSizeArray[1] = qrScannerRef.current!.clientWidth
+        dispatch({
+          type: RAT.MAXSCANNERSIZE,
+          payload: scannerSizeArray
+        })
+      }
+    }
+    scannerResizeHandler()
+    window.addEventListener('resize', scannerResizeHandler);
+
+    return () => {
+      window.removeEventListener('resize', scannerResizeHandler);
+    }
+  }, [usableHeight])
 
   useEffect(() => {
     // Try to parse the result to JSON format
@@ -186,7 +200,7 @@ const Scanner = () => {
         }
 
         {showScanner &&
-          <div className="Scanner" ref={qrScannerContainerRef}>
+          <div className="Scanner" ref={qrScannerRef}>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
               <QRScanner />
             </div>

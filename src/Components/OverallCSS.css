@@ -101,8 +101,8 @@
   background-color: gold;
   border-radius: 25px;
   border: 2px solid #3f51b5;
-  padding: 10px;
-  margin: 3px 30px ;
+  padding: 0.5%;
+  margin: 0.5% 3%;
 }
 
 .ScannerFlexBox {
@@ -118,17 +118,14 @@
   background-color: gold;
   border-radius: 25px;
   border: 2px solid #3f51b5;
-  padding: 10px;
-  margin: 3px 30px ;
+  padding: 0.5%;
+  margin: 0.5% 3%;
 }
 
 .ScannerFlexBox .Scanner {
   flex: 1;  
   align-self: stretch;
   background: orange;
-  overflow: auto;
-  border-radius: 25px;
-  border: 2px solid #3f51b5;
-  padding: 10px;
-  margin: 3px 30px ;
+  overflow: hidden;
+  margin: 0.5% 3%;
 }

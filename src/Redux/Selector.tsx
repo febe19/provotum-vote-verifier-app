@@ -28,5 +28,8 @@ export const getHeight = (state: any) => state?.windowHeight ?? '';
 
 export const getMaxScannerHeight = (state: any) => state?.maxScannerHeight ?? '';
 
+export const getMaxScannerWidth = (state: any) => state?.maxScannerWidth ?? '';
+
+
 
 

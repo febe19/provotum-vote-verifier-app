@@ -13,7 +13,7 @@ export enum RAT {
     CHALLENGE_OR_CAST = "CHALLENGE_OR_CAST",
     CALCULATED_BALLOT_HASH = "CALCULATED_BALLOT_HASH",
     WINDOWHEIGHT = "WINDOWHEIGHT",
-    MAXSCANNERHEIGHT = "MAXSCANNERHEIGHT",
+    MAXSCANNERSIZE = "MAXSCANNERSIZE",
 }
 
 //Redux State Type-Definition
@@ -30,6 +30,7 @@ export type State = {
     result: String,
     verificationResult: Boolean,
     windowHeight: Number,
+    maxScannerWidth: Number,
 }
 
 // Redux Initial State definition
@@ -46,6 +47,7 @@ const initState: State = {
     result: '',
     verificationResult: false,
     windowHeight: 0,
+    maxScannerWidth: 0,
 };
 
 
@@ -61,10 +63,11 @@ function Reducer(state: any = initState, action: any) {
                 windowHeight: action.payload
             }
         };
-        case RAT.MAXSCANNERHEIGHT: {
+        case RAT.MAXSCANNERSIZE: {
             return {
                 ...state,
-                maxScannerHeight: action.payload
+                maxScannerHeight: action.payload[0],
+                maxScannerWidth: action.payload[1]
             }
         };
         case RAT.SCANNER_RESULT: {
@@ -150,7 +153,7 @@ function Reducer(state: any = initState, action: any) {
             }
         case RAT.RESET:
             return {
-                ...initState, 
+                ...initState,
                 windowHeight: state.windowHeight
             };
         default:

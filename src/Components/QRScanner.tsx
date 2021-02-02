@@ -8,15 +8,17 @@ import {
     RAT
 } from '../Redux/Reducer'
 import {
-    getMaxScannerHeight
+    getMaxScannerHeight,
+    getMaxScannerWidth,
+    getHeight
 } from '../Redux/Selector';
 
 const QRScanner = () => {
-    const qrScannerContainerRef = useRef(null);
     console.log("QRScanner Ready")
     const dispatch = useDispatch()
 
     const maxScannerHeight = useSelector(getMaxScannerHeight);
+    const maxScannerWidth = useSelector(getMaxScannerWidth); 
 
     const handleScan = (result: any) => {
         if (result !== null) {
@@ -30,7 +32,13 @@ const QRScanner = () => {
 
     return (
 
-        <div className="qrScannerContainer" style={{maxHeight: maxScannerHeight, maxWidth: maxScannerHeight}}>
+        <div className="qrScannerContainer"
+            style={{
+                height: maxScannerWidth,
+                width: maxScannerWidth,
+                maxHeight: maxScannerHeight,
+                maxWidth: maxScannerHeight
+            }}>
             <div className="loaderPosition">
                 <div className="lds-dual-ring" />
                 <div className="loaderText">loading camera...</div>
