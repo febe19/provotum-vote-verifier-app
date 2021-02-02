@@ -97,10 +97,10 @@
     margin-right: 30px;
   }
 
-.hashDiv {
+.cardDiv {
   border-radius: 25px;
   border: 2px solid #3f51b5;
-  padding: 20px;
+  padding: 10px;
   margin: 30px;
   height: 100%;
 }

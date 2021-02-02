@@ -124,7 +124,7 @@ const Result = () => {
               </div>
             }
             {calculatedBallotHash !== '' &&
-              <div className="hashDiv">
+              <div className="cardDiv">
                 <p>RH -- {receivedBallotHash}</p>
                 <p>CH -- {calculatedBallotHash}</p>
                 <p>Verification Result is: {verificationResult.toString()}</p>

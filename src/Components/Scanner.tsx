@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux"
 import Button from '@material-ui/core/Button';
 import QRScanner from './QRScanner'
+import { Hashicon } from '@emeraldpay/hashicon-react';
 import {
   getReceivedBallotHash,
   getCommitmentScanned,
@@ -126,7 +127,8 @@ const Scanner = () => {
     <div>
 
       {showScanner &&
-        <div>
+        <div className="cardDiv">
+          <p>What to do</p>
           {!commitmentScanned && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <p>Please scan the commitment displayed on the voting device</p>
           </div>}
@@ -143,10 +145,6 @@ const Scanner = () => {
       {commitmentScanned && !showScanner && !challengeScanned && <div>
         <h1>Commitment scann successful</h1>
         <p>You scanned the commitment. Continue with 'vote' or 'challenge'</p>
-        <div className="hashDiv">
-          <p>Ballot Hash: {receivedBallotHash}</p>
-        </div>
-
         <div className="buttonDiv">
           <div className="buttonStyle">
             <Link onClick={onCast} to='/result' style={{ textDecoration: 'none' }}>
@@ -159,6 +157,7 @@ const Scanner = () => {
         </div>
       </div>
       }
+
 
       {commitmentScanned && challengeScanned &&
         <div>
@@ -173,6 +172,14 @@ const Scanner = () => {
         </div>
       }
 
+      {commitmentScanned &&
+        <div className="cardDiv">
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <p> Received Ballot Hash: {receivedBallotHash}</p>
+            <Hashicon value={receivedBallotHash} />
+          </div>
+        </div>
+      }
       {showScanner &&
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <QRScanner />
