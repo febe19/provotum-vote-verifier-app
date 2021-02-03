@@ -79,12 +79,10 @@ p {
 
 .progressFlexbox .titel {
   flex: 0 0 auto;
-  background-color: red
 }
 
 .progressFlexbox .item {
   flex: 1 1 auto;
-  background-color: gold;
 }
 
 .cardDiv {
@@ -171,7 +169,7 @@ p {
 
 .resultSVG {
   display: block;
-  margin: 10px auto 0;
+  margin: 0 auto;
 }
 
 .pathCircle {

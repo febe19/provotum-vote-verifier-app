@@ -23,7 +23,7 @@ export type State = {
     challengeScanned: Boolean,
     receivedBallotHash: String,
     calculatedBallotHash: String,
-    scannedChallengesNumbers: Array<Boolean>,
+    scannedChallengesNumbers: Array<any>,
     totalNrOfChallenges: number,
     votingQuestions: Array<any>,
     CoC: String,
@@ -41,7 +41,7 @@ const initState: State = {
     receivedBallotHash: '',
     calculatedBallotHash: '',
     scannedChallengesNumbers: [],
-    totalNrOfChallenges: 1,
+    totalNrOfChallenges: 0,
     votingQuestions: [],
     CoC: '',
     result: '',
@@ -136,7 +136,7 @@ function Reducer(state: any = initState, action: any) {
 
                 return {
                     ...state,
-                    scannedChallengesNumbers: state.scannedChallengesNumbers,
+                    scannedChallengesNumbers: [ ...state.scannedChallengesNumbers],
                     totalNrOfChallenges: action.payload.Total,
                 }
             }
@@ -147,7 +147,7 @@ function Reducer(state: any = initState, action: any) {
                     ...state,
                     publicKey: objWithHexStrToBn(action.payload.publicKey),
                     voterPublicKeyH: objWithHexStrToBn(action.payload.voterPublicKeyH),
-                    scannedChallengesNumbers: state.scannedChallengesNumbers,
+                    scannedChallengesNumbers: [ ...state.scannedChallengesNumbers],
                     totalNrOfChallenges: action.payload.Total,
                 };
             }

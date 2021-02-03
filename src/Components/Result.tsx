@@ -148,7 +148,7 @@ const Result = () => {
                 <h3>Encryption Result</h3>
                 {verificationResult &&
                   <div>
-                    <div className="centerHorizontally">
+                    <div className="centerHorizontally" style={{margin: '3%'}}>
                       <div style={{ width: usableHeight / 10, height: usableHeight / 10 }}>
                         <svg className="resultSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
                           <circle className="pathCircle" fill="none" stroke="#73AF55" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1" />

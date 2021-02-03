@@ -80,7 +80,7 @@ const Scanner = () => {
 
       } else if (commitmentScanned && !challengeScanned && qrCodeIsChallenge(qrData)) {
         dispatch({ type: RAT.ADD_CHALLENGE_DATA, payload: qrData })
-        
+
         // Iff all challenges are scanned, hide the scanner 
         if (scannedChallengesNumbers !== 'undefined' && scannedChallengesNumbers.length > 0 && scannedChallengesNumbers.every((v: any) => v === true)) {
           dispatch({ type: RAT.CHALLENGE_SCANNED })
@@ -91,7 +91,7 @@ const Scanner = () => {
       }
     }
   }, [result]);
-  
+
   // Check if qr data is Commitment and if it fits expected form
   const qrCodeIsCommitment = (qrData: any) => {
     if ('id' in qrData && qrData.id === "Commitment") {
@@ -144,11 +144,6 @@ const Scanner = () => {
     dispatch({ type: RAT.CHALLENGE_OR_CAST, payload: "CAST" })
   }
 
-  const getScannProgressItems = () => {
-    return (<div>Hello</div>)
-  }
-
-
   return (
     <div>
       <div className="ScannerFlexBox" style={{ height: usableHeight, maxHeight: usableHeight }}>
@@ -168,6 +163,14 @@ const Scanner = () => {
           </div>
         }
 
+        {showScanner && !commitmentScanned &&
+          <div className="Item">
+            <div className="centerHorizontally">
+              <h1 style={{ marginBottom: "1%" }}>Scan Commitment</h1>
+            </div>
+          </div>
+        }
+
         {commitmentScanned && challengeScanned &&
           <div className="Item">
             <div>
@@ -183,24 +186,35 @@ const Scanner = () => {
           </div>
         }
 
-        {showScanner && !commitmentScanned &&
-          <div className="Item">
-            <div className="centerHorizontally">
-              <h1 style={{ marginBottom: "1%" }}>Scan Commitment</h1>
-            </div>
-          </div>
-        }
-
-        {showScanner && commitmentScanned && !challengeScanned &&
+        {((showScanner && commitmentScanned) || (commitmentScanned && challengeScanned)) &&
           <div className="Item">
             <div className="progressFlexbox">
-              <h3 className="titel" style={{ margin: 'auto 1%' }}>Scanning-Progress</h3>
-              <p className="item">Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}</p>
-              {totalNrOfChallenges > 1 &&
-                <div id="ProgressDIV">
-                  Here
+              <h3 className="titel" style={{ margin: 'auto 10% auto 1%' }}>Scanning-Progress</h3>
+              {totalNrOfChallenges > 0 && scannedChallengesNumbers.map((v: any) =>
+                <div className="item">
+                  {v &&
+                    <div>
+                      <div style={{ margin: 'auto 10%' }}>
+                        <svg className="resultSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                          <circle className="pathCircle" fill="none" stroke="#73AF55" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1" />
+                          <polyline className="pathCheck" fill="none" stroke="#73AF55" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 " />
+                        </svg>
+                      </div>
+                    </div>
+                  }
+                  {!v &&
+                    <div>
+                      <div style={{ margin: 'auto 10%' }}>
+                        <svg className="resultSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                          <circle className="pathCircle" fill="none" stroke="#ba0000" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1" />
+                          <line className="pathLine" fill="none" stroke="#ba0000" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3" />
+                          <line className="pathLine" fill="none" stroke="#ba0000" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2" />
+                        </svg>
+                      </div>
+                    </div>
+                  }
                 </div>
-              }
+              )}
             </div>
           </div>
         }
