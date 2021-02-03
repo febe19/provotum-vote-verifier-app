@@ -68,6 +68,30 @@ function CreateEncryptedBallot(votingQuestions: Array<any>, publicKey: ElGamalPu
   return [encryptedBallots, verifies]
 }
 
+const getVotingQuestionText = (votingQuestions: Array<any>) => {
+  var questionArray: Array<any> = [];
+
+  Object.entries(votingQuestions).forEach(([key, value]) => {
+    if (value.answerBin === undefined) {
+      return
+    }
+    questionArray.push([value.Question, value.answerBin])
+  })
+
+  return (
+    questionArray.map((Questions: any) =>
+      <div>
+        The encryption was conducted with the following voting options. If you voted differently, the voting device is not honest. 
+        <div>
+          <ul>
+            <li>{Questions[1] === 1 ? 'YES': 'NO'} For: {Questions[0].toString()}</li>
+          </ul>
+        </div>
+      </div>
+    )
+  )
+}
+
 
 const Result = () => {
   console.log("== Result ============");
@@ -83,6 +107,8 @@ const Result = () => {
   const verificationResult: Boolean = useSelector(getVerificationResult);
   const usableHeight = useSelector(getHeight)
   var encryptionResult: Array<any> = []
+
+  console.log("Voting Questions: ", votingQuestions)
 
   dispatch({ type: RAT.STATUS, payload: AppStatus.RESULT })
 
@@ -127,10 +153,18 @@ const Result = () => {
             }
             {calculatedBallotHash !== '' &&
               <div className="cardDiv">
+
                 <h1>Result</h1>
+
+                <h3>Voting Questions</h3>
+                <div>
+                  {getVotingQuestionText(votingQuestions)}
+                </div>
+
+
                 <div className="centerHorizontally" style={{ alignItems: 'stretch' }}>
                   <div className="cardDivSmall">
-                    <h3>Received Hash</h3>
+                    <h3>Commitment</h3>
                     <p>{receivedBallotHash}</p>
                     <div className="centerHorizontally" style={{ margin: '2% auto' }}>
                       <Hashicon value={receivedBallotHash} size={usableHeight / 10} />
@@ -144,10 +178,11 @@ const Result = () => {
                     </div>
                   </div>
                 </div>
-                <h3>Encryption Result</h3>
+
+                <h3>Vote Verification Result</h3>
                 {verificationResult &&
                   <div>
-                    <div className="centerHorizontally" style={{ margin: '3%' }}>
+                    <div className="centerHorizontally" style={{ marginTop: '3%' }}>
                       <div style={{ width: usableHeight / 10, height: usableHeight / 10 }}>
                         <svg className="resultSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
                           <circle className="pathCircle" fill="none" stroke="#73AF55" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1" />
@@ -156,13 +191,13 @@ const Result = () => {
                       </div>
                     </div>
                     <div className="centerHorizontally">
-                      <p className="resultSuccess">Encryption Similar</p>
+                      <p className="resultSuccess">Verification sucessful</p>
                     </div>
                   </div>
                 }
                 {!verificationResult &&
                   <div>
-                    <div className="centerHorizontally">
+                    <div className="centerHorizontally" style={{ marginTop: '3%' }}>
                       <div style={{ width: usableHeight / 10, height: usableHeight / 10 }}>
                         <svg className="resultSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
                           <circle className="pathCircle" fill="none" stroke="#ba0000" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1" />
@@ -172,7 +207,7 @@ const Result = () => {
                       </div>
                     </div>
                     <div className="centerHorizontally">
-                      <p className="resultError">Encryption NOT Similar</p>
+                      <p className="resultError">Verification failed</p>
                     </div>
                   </div>
                 }

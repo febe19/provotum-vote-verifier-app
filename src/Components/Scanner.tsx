@@ -17,7 +17,7 @@ import {
   getHelpOpen,
 } from '../Redux/Selector';
 import {
-  RAT, 
+  RAT,
   AppStatus,
 } from '../Redux/Reducer'
 
@@ -25,6 +25,7 @@ const Scanner = () => {
   console.log("== Scanner Component ============");
 
   const qrScannerRef: any = useRef(null);
+  var qrData = {}
 
   //REDUX definitions
   const dispatch = useDispatch()
@@ -39,10 +40,9 @@ const Scanner = () => {
   const helpOpen = useSelector(getHelpOpen)
 
   useEffect(() => {
-    dispatch({ type: RAT.STATUS, payload: AppStatus.SCAN_COMMITMENT})
+    dispatch({ type: RAT.STATUS, payload: AppStatus.SCAN_COMMITMENT })
   }, [])
-  
-  var qrData = {}
+
 
   useEffect(() => {
     const scannerResizeHandler = () => {
@@ -83,7 +83,7 @@ const Scanner = () => {
       if (!commitmentScanned && qrCodeIsCommitment(qrData)) {
         dispatch({ type: RAT.HIDE_SCANNER })
         dispatch({ type: RAT.COMMITMENT_SCANNED })
-        dispatch({ type: RAT.STATUS, payload: AppStatus.CHALLENGE_OR_CAST})
+        dispatch({ type: RAT.STATUS, payload: AppStatus.CHALLENGE_OR_CAST })
         dispatch({ type: RAT.ADD_COMMITMENT_DATA, payload: qrData })
 
       } else if (commitmentScanned && !challengeScanned && qrCodeIsChallenge(qrData)) {
@@ -143,14 +143,14 @@ const Scanner = () => {
   // When User selects Challenge, show scanner
   const onChallenge = () => {
     dispatch({ type: RAT.SHOW_SCANNER })
-    dispatch({ type: RAT.STATUS, payload: AppStatus.SCAN_CHALLENGE})
+    dispatch({ type: RAT.STATUS, payload: AppStatus.SCAN_CHALLENGE })
     dispatch({ type: RAT.CHALLENGE_OR_CAST, payload: "CHALLENGE" })
   }
 
   // When User selects Cast, hide scanner, Link to result in HTML
   const onCast = () => {
     dispatch({ type: RAT.HIDE_SCANNER })
-    dispatch({ type: RAT.STATUS, payload: AppStatus.RESULT})
+    dispatch({ type: RAT.STATUS, payload: AppStatus.RESULT })
     dispatch({ type: RAT.CHALLENGE_OR_CAST, payload: "CAST" })
   }
 
@@ -182,14 +182,30 @@ const Scanner = () => {
         }
 
         {commitmentScanned && challengeScanned &&
-          <div className="Item">
-            <div>
-              <h1 className="centerHorizontally">Challenge scan successful</h1>
-              <h3> Received Ballot Hash: </h3>
-              <p>{receivedBallotHash}</p>
+          <div>
+            <div className="Item">
+              <div>
+                <h1 className="centerHorizontally">Challenge scan successful</h1>
+                <h3> Received Ballot Hash: </h3>
+                <p>{receivedBallotHash}</p>
+                <div className="centerHorizontally">
+                  <div className="hashIconDiv">
+                    <Hashicon value={receivedBallotHash} size={usableHeight / 10} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="buttonDivPosition">
               <div className="centerHorizontally">
-                <div className="hashIconDiv">
-                  <Hashicon value={receivedBallotHash} size={usableHeight / 10} />
+                <p>You scanned the challenge. Continue with 'Next'</p>
+              </div>
+
+              <div className="buttonDiv">
+                <div className="buttonStyle">
+                  <Link to='/result' style={{ textDecoration: 'none' }}>
+                    <Button variant="contained" color="primary" fullWidth={true}>Next</Button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -200,9 +216,9 @@ const Scanner = () => {
           <div className="Item">
             <div className="progressFlexbox">
               <h3 className="titel" style={{ margin: 'auto 10% auto 1%' }}>Scanning-Progress</h3>
-              {totalNrOfChallenges > 0 && scannedChallengesNumbers.map((v: any) =>
+              {totalNrOfChallenges > 0 && scannedChallengesNumbers.map((qrCodes: any) =>
                 <div className="item">
-                  {v &&
+                  {qrCodes &&
                     <div>
                       <div style={{ margin: 'auto 10%' }}>
                         <svg className="resultSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
@@ -212,7 +228,7 @@ const Scanner = () => {
                       </div>
                     </div>
                   }
-                  {!v &&
+                  {!qrCodes &&
                     <div>
                       <div style={{ margin: 'auto 10%' }}>
                         <svg className="resultSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
@@ -257,21 +273,6 @@ const Scanner = () => {
         </div>
       }
 
-      {commitmentScanned && challengeScanned &&
-        <div className="buttonDivPosition">
-          <div className="centerHorizontally">
-            <p>You scanned the challenge. Continue with 'view challenge'</p>
-          </div>
-
-          <div className="buttonDiv">
-            <div className="buttonStyle">
-              <Link to='/result' style={{ textDecoration: 'none' }}>
-                <Button variant="contained" color="primary" fullWidth={true}>View Challenge</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      }
 
     </div>
   )
