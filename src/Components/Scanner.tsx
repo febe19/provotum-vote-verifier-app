@@ -14,6 +14,7 @@ import {
   getResult,
   getTotalNrOfChallenges,
   getHeight,
+  getHelpOpen,
 } from '../Redux/Selector';
 import {
   RAT, 
@@ -35,6 +36,7 @@ const Scanner = () => {
   const scannedChallengesNumbers = useSelector(getScannedChallengesNumbers)
   const totalNrOfChallenges = useSelector(getTotalNrOfChallenges)
   const usableHeight = useSelector(getHeight)
+  const helpOpen = useSelector(getHelpOpen)
 
   useEffect(() => {
     dispatch({ type: RAT.STATUS, payload: AppStatus.SCAN_COMMITMENT})
@@ -64,7 +66,7 @@ const Scanner = () => {
 
   useEffect(() => {
     // Try to parse the result to JSON format
-    if (result !== null) {
+    if (result !== null && !helpOpen) {
       qrData = {};
       try {
         qrData = JSON.parse(result)
@@ -90,14 +92,13 @@ const Scanner = () => {
         // Iff all challenges are scanned, hide the scanner 
         if (scannedChallengesNumbers !== 'undefined' && scannedChallengesNumbers.length > 0 && scannedChallengesNumbers.every((v: any) => v === true)) {
           dispatch({ type: RAT.CHALLENGE_SCANNED })
-          dispatch({ type: RAT.STATUS, payload: AppStatus.RESULT})
           dispatch({ type: RAT.HIDE_SCANNER })
         }
       } else {
         return;
       }
     }
-  }, [result]);
+  }, [result, helpOpen]);
 
   // Check if qr data is Commitment and if it fits expected form
   const qrCodeIsCommitment = (qrData: any) => {

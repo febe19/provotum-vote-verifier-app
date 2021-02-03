@@ -10,7 +10,6 @@ import {
 import {
     getMaxScannerHeight,
     getMaxScannerWidth,
-    getHeight
 } from '../Redux/Selector';
 
 const QRScanner = () => {

@@ -85,7 +85,7 @@ const Result = () => {
   var encryptionResult: Array<any> = []
 
   dispatch({ type: RAT.STATUS, payload: AppStatus.RESULT })
-  
+
   // Encrypt the ballots wiht the received data and dispatch it to the Redux Store
   useEffect(() => {
     encryptionResult = CreateEncryptedBallot(votingQuestions, publicKey, voterPublicKeyH);
@@ -104,8 +104,8 @@ const Result = () => {
 
         {challengeOrCast == "CAST" &&
           <div className="cardDiv">
-
-            <p>Your selcted cast. Therefore, also select cast on the voting machine</p>
+            <h1>Cast</h1>
+            <p>You selcted cast. Therefore, also select cast on the voting machine.</p>
           </div>
         }
 

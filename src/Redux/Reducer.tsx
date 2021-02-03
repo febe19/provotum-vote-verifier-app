@@ -14,7 +14,8 @@ export enum RAT {
     CALCULATED_BALLOT_HASH = "CALCULATED_BALLOT_HASH",
     WINDOWHEIGHT = "WINDOWHEIGHT",
     MAXSCANNERSIZE = "MAXSCANNERSIZE",
-    STATUS = "STATUS"
+    STATUS = "STATUS",
+    HELP_OPEN = "HELP_OPEN",
 }
 
 export enum AppStatus {
@@ -42,6 +43,7 @@ export type State = {
     verificationResult: Boolean,
     windowHeight: number,
     maxScannerWidth: number,
+    helpOpen: Boolean,
 }
 
 // Redux Initial State definition
@@ -60,6 +62,7 @@ const initState: State = {
     verificationResult: false,
     windowHeight: 0,
     maxScannerWidth: 0,
+    helpOpen: false,
 };
 
 
@@ -82,6 +85,12 @@ function Reducer(state: any = initState, action: any) {
                 maxScannerWidth: action.payload[1]
             }
         };
+        case RAT.HELP_OPEN: {
+            return {
+                ...state, 
+                helpOpen: action.payload
+            }
+        }
         case RAT.STATUS: {
             return {
                 ...state,
