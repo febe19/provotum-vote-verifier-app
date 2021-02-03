@@ -80,20 +80,18 @@ const Scanner = () => {
 
       } else if (commitmentScanned && !challengeScanned && qrCodeIsChallenge(qrData)) {
         dispatch({ type: RAT.ADD_CHALLENGE_DATA, payload: qrData })
+        
+        // Iff all challenges are scanned, hide the scanner 
+        if (scannedChallengesNumbers !== 'undefined' && scannedChallengesNumbers.length > 0 && scannedChallengesNumbers.every((v: any) => v === true)) {
+          dispatch({ type: RAT.CHALLENGE_SCANNED })
+          dispatch({ type: RAT.HIDE_SCANNER })
+        }
       } else {
         return;
       }
     }
   }, [result]);
-
-  // Iff all challenges are scanned, hide the scanner 
-  useEffect(() => {
-    if (totalNrOfChallenges != 0 && scannedChallengesNumbers.length == totalNrOfChallenges) {
-      dispatch({ type: RAT.CHALLENGE_SCANNED })
-      dispatch({ type: RAT.HIDE_SCANNER })
-    }
-  }, [scannedChallengesNumbers])
-
+  
   // Check if qr data is Commitment and if it fits expected form
   const qrCodeIsCommitment = (qrData: any) => {
     if ('id' in qrData && qrData.id === "Commitment") {
@@ -146,6 +144,11 @@ const Scanner = () => {
     dispatch({ type: RAT.CHALLENGE_OR_CAST, payload: "CAST" })
   }
 
+  const getScannProgressItems = () => {
+    return (<div>Hello</div>)
+  }
+
+
   return (
     <div>
       <div className="ScannerFlexBox" style={{ height: usableHeight, maxHeight: usableHeight }}>
@@ -157,7 +160,7 @@ const Scanner = () => {
               <h3> Received Ballot Hash: </h3>
               <p>{receivedBallotHash}</p>
               <div className="centerHorizontally">
-              <div className="hashIconDiv">
+                <div className="hashIconDiv">
                   <Hashicon value={receivedBallotHash} size={usableHeight / 10} />
                 </div>
               </div>
@@ -183,16 +186,21 @@ const Scanner = () => {
         {showScanner && !commitmentScanned &&
           <div className="Item">
             <div className="centerHorizontally">
-              <h1 style={{marginBottom: "2%"}}>Scan Commitment</h1>
+              <h1 style={{ marginBottom: "1%" }}>Scan Commitment</h1>
             </div>
           </div>
         }
 
         {showScanner && commitmentScanned && !challengeScanned &&
           <div className="Item">
-            <div className="centerHorizontally">
-              <h1>Progress</h1>
-              <p>Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}</p>
+            <div className="progressFlexbox">
+              <h3 className="titel" style={{ margin: 'auto 1%' }}>Scanning-Progress</h3>
+              <p className="item">Currently scanned {scannedChallengesNumbers.length}/{totalNrOfChallenges}</p>
+              {totalNrOfChallenges > 1 &&
+                <div id="ProgressDIV">
+                  Here
+                </div>
+              }
             </div>
           </div>
         }

@@ -1,10 +1,10 @@
 h1 {
-  margin: 2% auto;
+  margin: 1% auto;
   margin-bottom: 4%;
 }
 
 h3 {
-  margin: 4% auto;
+  margin: 2% auto;
   margin-bottom: 0;
   margin-left: 0;
 }
@@ -39,7 +39,7 @@ p {
 
 .buttonDivPosition {
   position: fixed;
-  bottom: 1%;
+  bottom: 2%;
   width: 100%;
 }
 
@@ -70,6 +70,21 @@ p {
   flex-basis: auto;
   width: 100%;
   margin: 0 0.5%;
+}
+
+.progressFlexbox {
+  display: flex;
+  width: 100%;
+}
+
+.progressFlexbox .titel {
+  flex: 0 0 auto;
+  background-color: red
+}
+
+.progressFlexbox .item {
+  flex: 1 1 auto;
+  background-color: gold;
 }
 
 .cardDiv {

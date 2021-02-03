@@ -23,14 +23,14 @@ export type State = {
     challengeScanned: Boolean,
     receivedBallotHash: String,
     calculatedBallotHash: String,
-    scannedChallengesNumbers: Array<Number>,
-    totalNrOfChallenges: Number,
+    scannedChallengesNumbers: Array<Boolean>,
+    totalNrOfChallenges: number,
     votingQuestions: Array<any>,
     CoC: String,
     result: String,
     verificationResult: Boolean,
-    windowHeight: Number,
-    maxScannerWidth: Number,
+    windowHeight: number,
+    maxScannerWidth: number,
 }
 
 // Redux Initial State definition
@@ -52,7 +52,7 @@ const initState: State = {
 
 
 function Reducer(state: any = initState, action: any) {
-    if (action.type != "SCANNER_RESULT") { //TODO: Remove
+    if (action.type != RAT.SCANNER_RESULT) { //TODO: Remove
         console.log("Reducer: ", action)
     }
 
@@ -113,6 +113,14 @@ function Reducer(state: any = initState, action: any) {
                 votingQuestions: action.payload.VotingQuestions
             };
         case RAT.ADD_CHALLENGE_DATA:
+            
+            // Create Array and set scanend array to true
+            if (state.scannedChallengesNumbers === [] || state.scannedChallengesNumbers.length == 0) {
+                state.scannedChallengesNumbers = new Array(action.payload.Total).fill(false)
+            }
+            state.scannedChallengesNumbers[action.payload.Counter] = true
+            
+            
             // Add non-General Data (actual Voting Question data) to the state and return it
             if (action.payload.Key != "GeneralData") {
                 var key = action.payload.Key
@@ -124,20 +132,22 @@ function Reducer(state: any = initState, action: any) {
                     reEncryptionProof: (state.votingQuestions[key] ? (state.votingQuestions[key].reEncryptionProof ? (state.votingQuestions[key].reEncryptionProof) : objWithHexStrToBn(action.payload.reEncryptionProof)) : objWithHexStrToBn(action.payload.reEncryptionProof)),
                 }
 
+                console.log("scannedChallengesNumbers before IF: ", state.scannedChallengesNumbers)
+
                 return {
                     ...state,
-                    scannedChallengesNumbers: [...state.scannedChallengesNumbers, action.payload.Counter],
+                    scannedChallengesNumbers: state.scannedChallengesNumbers,
                     totalNrOfChallenges: action.payload.Total,
                 }
             }
 
+            // Add General Data (Public Key)
             if (action.payload.Key == 'GeneralData') {
-                // Add General Data (Public Key)
                 return {
                     ...state,
                     publicKey: objWithHexStrToBn(action.payload.publicKey),
                     voterPublicKeyH: objWithHexStrToBn(action.payload.voterPublicKeyH),
-                    scannedChallengesNumbers: [...state.scannedChallengesNumbers, action.payload.Counter],
+                    scannedChallengesNumbers: state.scannedChallengesNumbers,
                     totalNrOfChallenges: action.payload.Total,
                 };
             }
