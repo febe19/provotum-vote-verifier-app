@@ -14,10 +14,21 @@ export enum RAT {
     CALCULATED_BALLOT_HASH = "CALCULATED_BALLOT_HASH",
     WINDOWHEIGHT = "WINDOWHEIGHT",
     MAXSCANNERSIZE = "MAXSCANNERSIZE",
+    STATUS = "STATUS"
+}
+
+export enum AppStatus {
+    INTRO = "INTRO",
+    NOT_FOUND = "NOTFOUND",
+    SCAN_COMMITMENT ="SCAN_COMMITMENT",
+    SCAN_CHALLENGE = "SCAN_CHALLENGE",
+    CHALLENGE_OR_CAST = "CHALLENGE_OR_CAST",
+    RESULT = "RESULT",
 }
 
 //Redux State Type-Definition
 export type State = {
+    status: AppStatus,
     showScanner: Boolean,
     commitmentScanned: Boolean,
     challengeScanned: Boolean,
@@ -35,6 +46,7 @@ export type State = {
 
 // Redux Initial State definition
 const initState: State = {
+    status: AppStatus.INTRO,
     showScanner: true,
     commitmentScanned: false,
     challengeScanned: false,
@@ -68,6 +80,12 @@ function Reducer(state: any = initState, action: any) {
                 ...state,
                 maxScannerHeight: action.payload[0],
                 maxScannerWidth: action.payload[1]
+            }
+        };
+        case RAT.STATUS: {
+            return {
+                ...state,
+                status: action.payload
             }
         };
         case RAT.SCANNER_RESULT: {
@@ -113,14 +131,13 @@ function Reducer(state: any = initState, action: any) {
                 votingQuestions: action.payload.VotingQuestions
             };
         case RAT.ADD_CHALLENGE_DATA:
-            
+
             // Create Array and set scanend array to true
             if (state.scannedChallengesNumbers === [] || state.scannedChallengesNumbers.length == 0) {
                 state.scannedChallengesNumbers = new Array(action.payload.Total).fill(false)
             }
             state.scannedChallengesNumbers[action.payload.Counter] = true
-            
-            
+
             // Add non-General Data (actual Voting Question data) to the state and return it
             if (action.payload.Key != "GeneralData") {
                 var key = action.payload.Key
@@ -131,12 +148,9 @@ function Reducer(state: any = initState, action: any) {
                     reEncryptedBallot: (state.votingQuestions[key] ? (state.votingQuestions[key].reEncryptedBallot ? (state.votingQuestions[key].reEncryptedBallot) : objWithHexStrToBn(action.payload.reEncryptedBallot)) : objWithHexStrToBn(action.payload.reEncryptedBallot)),
                     reEncryptionProof: (state.votingQuestions[key] ? (state.votingQuestions[key].reEncryptionProof ? (state.votingQuestions[key].reEncryptionProof) : objWithHexStrToBn(action.payload.reEncryptionProof)) : objWithHexStrToBn(action.payload.reEncryptionProof)),
                 }
-
-                console.log("scannedChallengesNumbers before IF: ", state.scannedChallengesNumbers)
-
                 return {
                     ...state,
-                    scannedChallengesNumbers: [ ...state.scannedChallengesNumbers],
+                    scannedChallengesNumbers: [...state.scannedChallengesNumbers],
                     totalNrOfChallenges: action.payload.Total,
                 }
             }
@@ -147,11 +161,10 @@ function Reducer(state: any = initState, action: any) {
                     ...state,
                     publicKey: objWithHexStrToBn(action.payload.publicKey),
                     voterPublicKeyH: objWithHexStrToBn(action.payload.voterPublicKeyH),
-                    scannedChallengesNumbers: [ ...state.scannedChallengesNumbers],
+                    scannedChallengesNumbers: [...state.scannedChallengesNumbers],
                     totalNrOfChallenges: action.payload.Total,
                 };
             }
-
             return {
                 ...state
             }

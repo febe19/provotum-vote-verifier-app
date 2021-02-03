@@ -4,14 +4,16 @@ import { useDispatch } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import './OverallCSS.css'
 import {
-    RAT
+    RAT, 
+    AppStatus
 } from '../Redux/Reducer'
 
 
 const Intro = () => {
-    console.log("Intro Ready");
+    console.log("== Intro ============");
     const dispatch = useDispatch()
     dispatch({ type: RAT.RESET });
+    dispatch({ type: RAT.STATUS, payload: AppStatus.INTRO})
 
     return (
         <div>

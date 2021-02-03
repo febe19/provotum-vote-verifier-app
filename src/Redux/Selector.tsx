@@ -30,6 +30,9 @@ export const getMaxScannerHeight = (state: any) => state?.maxScannerHeight ?? ''
 
 export const getMaxScannerWidth = (state: any) => state?.maxScannerWidth ?? '';
 
+export const getAppStatus = (state: any) => state?.status ?? '';
+
+
 
 
 

@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux"
 import Button from '@material-ui/core/Button';
 import QRScanner from './QRScanner'
 import { Hashicon } from '@emeraldpay/hashicon-react';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   getReceivedBallotHash,
   getCommitmentScanned,
@@ -14,13 +15,13 @@ import {
   getTotalNrOfChallenges,
   getHeight,
 } from '../Redux/Selector';
-
 import {
-  RAT
+  RAT, 
+  AppStatus,
 } from '../Redux/Reducer'
 
 const Scanner = () => {
-  console.log("Scanner Ready")
+  console.log("== Scanner Component ============");
 
   const qrScannerRef: any = useRef(null);
 
@@ -35,6 +36,10 @@ const Scanner = () => {
   const totalNrOfChallenges = useSelector(getTotalNrOfChallenges)
   const usableHeight = useSelector(getHeight)
 
+  useEffect(() => {
+    dispatch({ type: RAT.STATUS, payload: AppStatus.SCAN_COMMITMENT})
+  }, [])
+  
   var qrData = {}
 
   useEffect(() => {
@@ -76,6 +81,7 @@ const Scanner = () => {
       if (!commitmentScanned && qrCodeIsCommitment(qrData)) {
         dispatch({ type: RAT.HIDE_SCANNER })
         dispatch({ type: RAT.COMMITMENT_SCANNED })
+        dispatch({ type: RAT.STATUS, payload: AppStatus.CHALLENGE_OR_CAST})
         dispatch({ type: RAT.ADD_COMMITMENT_DATA, payload: qrData })
 
       } else if (commitmentScanned && !challengeScanned && qrCodeIsChallenge(qrData)) {
@@ -84,6 +90,7 @@ const Scanner = () => {
         // Iff all challenges are scanned, hide the scanner 
         if (scannedChallengesNumbers !== 'undefined' && scannedChallengesNumbers.length > 0 && scannedChallengesNumbers.every((v: any) => v === true)) {
           dispatch({ type: RAT.CHALLENGE_SCANNED })
+          dispatch({ type: RAT.STATUS, payload: AppStatus.RESULT})
           dispatch({ type: RAT.HIDE_SCANNER })
         }
       } else {
@@ -119,15 +126,15 @@ const Scanner = () => {
         if (!scannedChallengesNumbers.includes(qrData.Counter)) {
           return true;
         } else {
-          console.log("CHALLENGE: Already scanned challenge with ID: ", qrData.Counter)
+          console.log("CHALLENGE: Already scanned challenge with ID: ", qrData.Counter);
           return false
         }
       } else {
-        console.log("CHALLENGE: Problem with Counter")
+        console.log("CHALLENGE: Problem with Counter");
         return false
       }
     } else {
-      console.log("CHALLENGE: Problem With ID")
+      console.log("CHALLENGE: Problem With ID");
       return false
     }
   }
@@ -135,12 +142,14 @@ const Scanner = () => {
   // When User selects Challenge, show scanner
   const onChallenge = () => {
     dispatch({ type: RAT.SHOW_SCANNER })
+    dispatch({ type: RAT.STATUS, payload: AppStatus.SCAN_CHALLENGE})
     dispatch({ type: RAT.CHALLENGE_OR_CAST, payload: "CHALLENGE" })
   }
 
   // When User selects Cast, hide scanner, Link to result in HTML
   const onCast = () => {
     dispatch({ type: RAT.HIDE_SCANNER })
+    dispatch({ type: RAT.STATUS, payload: AppStatus.RESULT})
     dispatch({ type: RAT.CHALLENGE_OR_CAST, payload: "CAST" })
   }
 
@@ -262,6 +271,7 @@ const Scanner = () => {
           </div>
         </div>
       }
+
     </div>
   )
 }

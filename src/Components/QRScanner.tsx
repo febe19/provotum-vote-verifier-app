@@ -14,7 +14,6 @@ import {
 } from '../Redux/Selector';
 
 const QRScanner = () => {
-    console.log("QRScanner Ready")
     const dispatch = useDispatch()
     const maxScannerHeight = useSelector(getMaxScannerHeight);
     const maxScannerWidth = useSelector(getMaxScannerWidth); 

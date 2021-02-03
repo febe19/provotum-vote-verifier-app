@@ -7,9 +7,9 @@ import BN from 'bn.js';
 import * as crypto from "crypto-js";
 import { Hashicon } from '@emeraldpay/hashicon-react';
 import {
-  RAT
+  RAT,
+  AppStatus
 } from '../Redux/Reducer'
-
 import {
   getChallengeOrCast,
   getReceivedBallotHash,
@@ -70,6 +70,7 @@ function CreateEncryptedBallot(votingQuestions: Array<any>, publicKey: ElGamalPu
 
 
 const Result = () => {
+  console.log("== Result ============");
 
   // REDUX Definitions
   const dispatch = useDispatch()
@@ -83,13 +84,11 @@ const Result = () => {
   const usableHeight = useSelector(getHeight)
   var encryptionResult: Array<any> = []
 
+  dispatch({ type: RAT.STATUS, payload: AppStatus.RESULT })
+  
   // Encrypt the ballots wiht the received data and dispatch it to the Redux Store
   useEffect(() => {
     encryptionResult = CreateEncryptedBallot(votingQuestions, publicKey, voterPublicKeyH);
-    console.log("Encrypted Ballots:", encryptionResult[0])
-    console.log("All Verified:", encryptionResult[1])
-    console.log("CalculatedBallotHash: ", crypto.SHA256(JSON.stringify(encryptionResult[0])).toString())
-
     dispatch({
       type: RAT.CALCULATED_BALLOT_HASH,
       payload: {
@@ -133,22 +132,22 @@ const Result = () => {
                   <div className="cardDivSmall">
                     <h3>Received Hash</h3>
                     <p>{receivedBallotHash}</p>
-                    <div className="centerHorizontally" style={{margin: '2% auto'}}>
+                    <div className="centerHorizontally" style={{ margin: '2% auto' }}>
                       <Hashicon value={receivedBallotHash} size={usableHeight / 10} />
                     </div>
                   </div>
                   <div className="cardDivSmall">
                     <h3>Calculated Hash</h3>
                     <p>{calculatedBallotHash}</p>
-                    <div className="centerHorizontally" style={{margin: '2% auto'}}>
-                      <Hashicon  value={calculatedBallotHash} size={usableHeight / 10} />
+                    <div className="centerHorizontally" style={{ margin: '2% auto' }}>
+                      <Hashicon value={calculatedBallotHash} size={usableHeight / 10} />
                     </div>
                   </div>
                 </div>
                 <h3>Encryption Result</h3>
                 {verificationResult &&
                   <div>
-                    <div className="centerHorizontally" style={{margin: '3%'}}>
+                    <div className="centerHorizontally" style={{ margin: '3%' }}>
                       <div style={{ width: usableHeight / 10, height: usableHeight / 10 }}>
                         <svg className="resultSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
                           <circle className="pathCircle" fill="none" stroke="#73AF55" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1" />

@@ -1,7 +1,15 @@
 import { Link } from "react-router-dom";
 import Button from '@material-ui/core/Button';
+import { useDispatch } from 'react-redux';
+import {
+    RAT,
+    AppStatus,
+} from '../Redux/Reducer'
 
 const NotFound = () => {
+    console.log("== NotFound ============");
+    const dispatch = useDispatch()
+    dispatch({ type: RAT.STATUS, payload: AppStatus.NOT_FOUND })
     return (
         <div>
             <div className="cardDiv">

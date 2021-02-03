@@ -15,9 +15,9 @@ function App() {
   const dispatch = useDispatch()
   const headerRef: any = useRef(null);
   const bodyRef: any = useRef(null);
-  var usableHeight: number = 0
+  var usableHeight: number = 0;
 
-  console.log("App Ready")
+  console.log("== App ============");
 
   useEffect(() => {
     const resizeHandler = () => {
