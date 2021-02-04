@@ -125,6 +125,7 @@ const Scanner = () => {
 
           setTimeout(() => {
             dispatch({ type: RAT.HIDE_SCANNER })
+            dispatch({ type: RAT.STATUS, payload: AppStatus.CONFIRM_SELECTION })
           }, 1000);
 
           Object.entries(votingQuestions).forEach(([key, value]) => {
@@ -292,11 +293,11 @@ const Scanner = () => {
           <div className="buttonDiv">
             <div className="buttonStyle">
               <Link onClick={onCast} to='/result' style={{ textDecoration: 'none' }}>
-                <Button variant="contained" color="primary" fullWidth={true}>Cast</Button>
+                <Button variant="contained" color="primary" fullWidth={true} disabled={helpOpen}>Cast</Button>
               </Link>
             </div>
             <div className="buttonStyle">
-              <Button onClick={onChallenge} variant="contained" color="primary" fullWidth={true}>Challenge</Button>
+              <Button onClick={onChallenge} variant="contained" color="primary" fullWidth={true} disabled={helpOpen}>Challenge</Button>
             </div>
           </div>
         </div>
@@ -311,12 +312,12 @@ const Scanner = () => {
           <div className="buttonDiv">
             <div className="buttonStyle">
               <Link onClick={onNOTConfirmSelection} to='/result' style={{ textDecoration: 'none' }}>
-                <Button variant="contained" color="primary" fullWidth={true}>No</Button>
+                <Button variant="contained" color="primary" fullWidth={true} disabled={helpOpen}>No</Button>
               </Link>
             </div>
             <div className="buttonStyle">
               <Link onClick={onConfirmSelection} to='/result' style={{ textDecoration: 'none' }}>
-                <Button variant="contained" color="primary" fullWidth={true}>Yes</Button>
+                <Button variant="contained" color="primary" fullWidth={true} disabled={helpOpen}>Yes</Button>
               </Link>
             </div>
           </div>

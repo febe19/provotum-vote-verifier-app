@@ -26,6 +26,7 @@ export enum AppStatus {
     SCAN_CHALLENGE = "SCAN_CHALLENGE",
     CHALLENGE_OR_CAST = "CHALLENGE_OR_CAST",
     RESULT = "RESULT",
+    CONFIRM_SELECTION = "CONFIRM_SELECTION"
 }
 
 //Redux State Type-Definition

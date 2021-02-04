@@ -20,6 +20,7 @@ import {
   getVerificationResult,
   getHeight,
   getSelectionConfirmed,
+  getHelpOpen,
 } from '../Redux/Selector'
 
 import {
@@ -83,6 +84,7 @@ const Result = () => {
   const verificationResult: Boolean = useSelector(getVerificationResult);
   const usableHeight = useSelector(getHeight)
   const selectionConfirmed = useSelector(getSelectionConfirmed)
+  const helpOpen = useSelector(getHelpOpen)
   var encryptionResult: Array<any> = []
 
   console.log("Voting Questions: ", votingQuestions)
@@ -226,7 +228,7 @@ const Result = () => {
         <div className="buttonDiv">
           <div className="buttonStyle">
             <Link to="/" style={{ textDecoration: 'none' }}>
-              <Button variant="contained" color="primary" fullWidth={true}>Back to Start</Button>
+              <Button variant="contained" color="primary" fullWidth={true} disabled={helpOpen}>Back to Start</Button>
             </Link>
           </div>
         </div>

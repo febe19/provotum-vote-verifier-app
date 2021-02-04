@@ -148,6 +148,28 @@ p {
   margin: 0.5% 3%;
 }
 
+.helpSnackbar {
+  color: #023761;
+  width: 94vw;
+  padding: 0.5%;
+  background-color: #bbdffa;
+  border-radius: 5px;
+}
+
+.helpFlexBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.helpFlexBox .Item {
+  flex: 0;
+  align-self: stretch;
+  padding: 0.5%;
+  margin: 0.5% 3%;
+}
+
+
 .hashIconDiv {
   margin: 1% auto 0 auto;
   min-width: 70px;
@@ -229,14 +251,14 @@ p {
   text-align: center;
   margin: 0;
   font-size: 1.25em;
-  color:#73AF55;
+  color: #73AF55;
 }
 
 .resultError {
   text-align: center;
   margin: 0;
   font-size: 1.25em;
-  color:#ba0000;
+  color: #ba0000;
 }
 
 @-webkit-keyframes dash {
