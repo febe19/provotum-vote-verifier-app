@@ -34,6 +34,8 @@ export const getAppStatus = (state: any) => state?.status ?? '';
 
 export const getHelpOpen = (state: any) => state?.helpOpen ?? '';
 
+export const getSelectionConfirmed = (state: any) => state?.selectionConfirmed ?? false;
+
 
 
 

@@ -16,6 +16,7 @@ export enum RAT {
     MAXSCANNERSIZE = "MAXSCANNERSIZE",
     STATUS = "STATUS",
     HELP_OPEN = "HELP_OPEN",
+    SELECTION_CONFIRMED = "SELECTION_CONFIRMED",
 }
 
 export enum AppStatus {
@@ -44,6 +45,7 @@ export type State = {
     windowHeight: number,
     maxScannerWidth: number,
     helpOpen: Boolean,
+    selectionConfirmed: Boolean,
 }
 
 // Redux Initial State definition
@@ -63,6 +65,7 @@ const initState: State = {
     windowHeight: 0,
     maxScannerWidth: 0,
     helpOpen: false,
+    selectionConfirmed: false
 };
 
 
@@ -128,6 +131,12 @@ function Reducer(state: any = initState, action: any) {
                 ...state,
                 CoC: action.payload,
             }
+        case RAT.SELECTION_CONFIRMED: {
+            return {
+                ...state, 
+                selectionConfirmed: action.payload
+            }
+        }
         case RAT.ADD_COMMITMENT_DATA:
             // Add thequestion to a field 'Question' instead of directly to the key
             Object.entries(action.payload.VotingQuestions).forEach(([key, value]: any) => {

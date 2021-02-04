@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux"
 import Button from '@material-ui/core/Button';
 import QRScanner from './QRScanner'
 import { Hashicon } from '@emeraldpay/hashicon-react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   getReceivedBallotHash,
   getCommitmentScanned,
@@ -15,17 +14,47 @@ import {
   getTotalNrOfChallenges,
   getHeight,
   getHelpOpen,
+  getVotingQuestions,
 } from '../Redux/Selector';
 import {
   RAT,
   AppStatus,
 } from '../Redux/Reducer'
 
+const getVotingQuestionText = (votingQuestions: Array<any>) => {
+  var questionArray: Array<any> = [];
+
+  Object.entries(votingQuestions).forEach(([key, value]) => {
+    if (value.answerBin === undefined) {
+      return
+    }
+    questionArray.push([value.Question, value.answerBin])
+  })
+
+  return (
+    <div>
+      {questionArray.map((Questions: any) =>
+        <div>
+          <div className="questionFlexbox">
+            <div className="question">
+              {Questions[0].toString()}
+            </div>
+            <div className="answer">
+              <h3 style={{ margin: 'auto 1% auto 5%' }}>{Questions[1] === 1 ? 'YES' : 'NO'}</h3>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 const Scanner = () => {
   console.log("== Scanner Component ============");
 
   const qrScannerRef: any = useRef(null);
   var qrData = {}
+  var questionArray: Array<any> = [];
 
   //REDUX definitions
   const dispatch = useDispatch()
@@ -38,6 +67,7 @@ const Scanner = () => {
   const totalNrOfChallenges = useSelector(getTotalNrOfChallenges)
   const usableHeight = useSelector(getHeight)
   const helpOpen = useSelector(getHelpOpen)
+  const votingQuestions: Array<any> = useSelector(getVotingQuestions);
 
   useEffect(() => {
     dispatch({ type: RAT.STATUS, payload: AppStatus.SCAN_COMMITMENT })
@@ -92,7 +122,18 @@ const Scanner = () => {
         // Iff all challenges are scanned, hide the scanner 
         if (scannedChallengesNumbers !== 'undefined' && scannedChallengesNumbers.length > 0 && scannedChallengesNumbers.every((v: any) => v === true)) {
           dispatch({ type: RAT.CHALLENGE_SCANNED })
-          dispatch({ type: RAT.HIDE_SCANNER })
+
+          setTimeout(() => {
+            dispatch({ type: RAT.HIDE_SCANNER })
+          }, 1000);
+
+          Object.entries(votingQuestions).forEach(([key, value]) => {
+            console.log("Key: ", key, "--> Value: ", value)
+            if (value.answerBin === undefined) {
+              return
+            }
+            questionArray.push([value.Question, value.answerBin])
+          })
         }
       } else {
         return;
@@ -154,24 +195,18 @@ const Scanner = () => {
     dispatch({ type: RAT.CHALLENGE_OR_CAST, payload: "CAST" })
   }
 
+  const onConfirmSelection = () => {
+    dispatch({ type: RAT.SELECTION_CONFIRMED, payload: true })
+  }
+
+  // When User selects Cast, hide scanner, Link to result in HTML
+  const onNOTConfirmSelection = () => {
+    dispatch({ type: RAT.SELECTION_CONFIRMED, payload: false })
+  }
+
   return (
     <div>
       <div className="ScannerFlexBox" style={{ height: usableHeight, maxHeight: usableHeight }}>
-
-        {commitmentScanned && !challengeScanned &&
-          <div className="Item">
-            <div>
-              <h1 className="centerHorizontally">Commitment scan successful</h1>
-              <h3> Received Ballot Hash: </h3>
-              <p>{receivedBallotHash}</p>
-              <div className="centerHorizontally">
-                <div className="hashIconDiv">
-                  <Hashicon value={receivedBallotHash} size={usableHeight / 10} />
-                </div>
-              </div>
-            </div>
-          </div>
-        }
 
         {showScanner && !commitmentScanned &&
           <div className="Item">
@@ -181,47 +216,33 @@ const Scanner = () => {
           </div>
         }
 
-        {commitmentScanned && challengeScanned &&
-          <div>
-            <div className="Item">
-              <div>
-                <h1 className="centerHorizontally">Challenge scan successful</h1>
-                <h3> Received Ballot Hash: </h3>
-                <p>{receivedBallotHash}</p>
-                <div className="centerHorizontally">
-                  <div className="hashIconDiv">
-                    <Hashicon value={receivedBallotHash} size={usableHeight / 10} />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="buttonDivPosition">
+        {commitmentScanned &&
+          <div className="Item">
+            <div>
+              <h1 className="centerHorizontally">Commitment scan successful</h1>
+              <h3> Received Ballot Hash </h3>
+              <p>{receivedBallotHash}</p>
               <div className="centerHorizontally">
-                <p>You scanned the challenge. Continue with 'Next'</p>
-              </div>
-
-              <div className="buttonDiv">
-                <div className="buttonStyle">
-                  <Link to='/result' style={{ textDecoration: 'none' }}>
-                    <Button variant="contained" color="primary" fullWidth={true}>Next</Button>
-                  </Link>
+                <div className="hashIconDiv">
+                  <Hashicon value={receivedBallotHash} size={(usableHeight / 10) < 70 ? 70 : (usableHeight / 10)} />
                 </div>
               </div>
             </div>
           </div>
         }
 
-        {((showScanner && commitmentScanned) || (commitmentScanned && challengeScanned)) &&
+        {((showScanner && commitmentScanned) || (commitmentScanned && challengeScanned && showScanner)) &&
           <div className="Item">
             <div className="progressFlexbox">
-              <h3 className="titel" style={{ margin: 'auto 10% auto 1%' }}>Scanning-Progress</h3>
+              <div style={{ height: usableHeight * 0.05, marginLeft: '1%', marginRight: '5%' }} className="titel" >
+                <h3 style={{ marginTop: '0' }}>Scanning-Progress</h3>
+              </div>
               {totalNrOfChallenges > 0 && scannedChallengesNumbers.map((qrCodes: any) =>
                 <div className="item">
                   {qrCodes &&
                     <div>
                       <div style={{ margin: 'auto 10%' }}>
-                        <svg className="resultSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                        <svg className="resultSVG" style={{ height: usableHeight * 0.05 }} version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
                           <circle className="pathCircle" fill="none" stroke="#73AF55" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1" />
                           <polyline className="pathCheck" fill="none" stroke="#73AF55" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 " />
                         </svg>
@@ -231,7 +252,7 @@ const Scanner = () => {
                   {!qrCodes &&
                     <div>
                       <div style={{ margin: 'auto 10%' }}>
-                        <svg className="resultSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                        <svg className="resultSVG" style={{ height: usableHeight * 0.05 }} version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
                           <circle className="pathCircle" fill="none" stroke="#ba0000" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1" />
                           <line className="pathLine" fill="none" stroke="#ba0000" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3" />
                           <line className="pathLine" fill="none" stroke="#ba0000" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2" />
@@ -245,6 +266,14 @@ const Scanner = () => {
           </div>
         }
 
+        {commitmentScanned && challengeScanned && !showScanner &&
+          <div className="Item">
+            <h3>Voting Questions</h3>
+            <div className="centerHorizontally">
+              {getVotingQuestionText(votingQuestions)}
+            </div>
+          </div>
+        }
 
         {showScanner &&
           <div className="Scanner" ref={qrScannerRef}>
@@ -255,10 +284,10 @@ const Scanner = () => {
         }
       </div>
 
-      {commitmentScanned && !showScanner && !challengeScanned &&
+      {!showScanner && commitmentScanned && !challengeScanned &&
         <div className="buttonDivPosition">
           <div className="centerHorizontally">
-            <p>You scanned the commitment, continue with 'cast' or 'challenge'</p>
+            <p style={{ margin: '0.5% 3%' }}>You scanned the commitment, continue with 'cast' or 'challenge'</p>
           </div>
           <div className="buttonDiv">
             <div className="buttonStyle">
@@ -273,6 +302,26 @@ const Scanner = () => {
         </div>
       }
 
+      {!showScanner && commitmentScanned && challengeScanned &&
+        <div className="buttonDivPosition">
+          <div className="centerHorizontally">
+            <p>Did you vote for the displayed options above?</p>
+          </div>
+
+          <div className="buttonDiv">
+            <div className="buttonStyle">
+              <Link onClick={onNOTConfirmSelection} to='/result' style={{ textDecoration: 'none' }}>
+                <Button variant="contained" color="primary" fullWidth={true}>No</Button>
+              </Link>
+            </div>
+            <div className="buttonStyle">
+              <Link onClick={onConfirmSelection} to='/result' style={{ textDecoration: 'none' }}>
+                <Button variant="contained" color="primary" fullWidth={true}>Yes</Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      }
 
     </div>
   )

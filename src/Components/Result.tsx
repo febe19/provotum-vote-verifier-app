@@ -19,6 +19,7 @@ import {
   getVoterPublicKeyH,
   getVerificationResult,
   getHeight,
+  getSelectionConfirmed,
 } from '../Redux/Selector'
 
 import {
@@ -68,31 +69,6 @@ function CreateEncryptedBallot(votingQuestions: Array<any>, publicKey: ElGamalPu
   return [encryptedBallots, verifies]
 }
 
-const getVotingQuestionText = (votingQuestions: Array<any>) => {
-  var questionArray: Array<any> = [];
-
-  Object.entries(votingQuestions).forEach(([key, value]) => {
-    if (value.answerBin === undefined) {
-      return
-    }
-    questionArray.push([value.Question, value.answerBin])
-  })
-
-  return (
-    questionArray.map((Questions: any) =>
-      <div>
-        The encryption was conducted with the following voting options. If you voted differently, the voting device is not honest. 
-        <div>
-          <ul>
-            <li>{Questions[1] === 1 ? 'YES': 'NO'} For: {Questions[0].toString()}</li>
-          </ul>
-        </div>
-      </div>
-    )
-  )
-}
-
-
 const Result = () => {
   console.log("== Result ============");
 
@@ -106,6 +82,7 @@ const Result = () => {
   const voterPublicKeyH: BN = useSelector(getVoterPublicKeyH);
   const verificationResult: Boolean = useSelector(getVerificationResult);
   const usableHeight = useSelector(getHeight)
+  const selectionConfirmed = useSelector(getSelectionConfirmed)
   var encryptionResult: Array<any> = []
 
   console.log("Voting Questions: ", votingQuestions)
@@ -131,19 +108,48 @@ const Result = () => {
         {challengeOrCast == "CAST" &&
           <div className="cardDiv">
             <h1>Cast</h1>
-            <p>You selcted cast. Therefore, also select cast on the voting machine.</p>
+            <div style={{ marginBottom: '2%' }}>
+              <p>You selcted cast. Therefore, also select cast on the voting machine.</p>
+            </div>
           </div>
         }
 
         {challengeOrCast != "CAST" && challengeOrCast != 'CHALLENGE' &&
           <div className="cardDiv">
             <h1>Error</h1>
-            <p>You did not scan the commitment.</p>
-            <p>Please go back to start and restart the verification</p>
+            <div style={{ marginBottom: '2%' }}>
+              <p>You did not scan the commitment.</p>
+              <p>Please go back to start and restart the verification</p>
+            </div>
           </div>
         }
 
-        {challengeOrCast == "CHALLENGE" &&
+        {challengeOrCast == "CHALLENGE" && !selectionConfirmed &&
+          <div className="cardDiv">
+            <h1>Result</h1>
+            <p>You did not confirm the received vote answers for the current voting questions. The voting device sent wrong vote answers or you previously selected 'No' despite the selected answers were shown.</p>
+            <div>
+              <h3>Vote Verification Result</h3>
+              <div className="centerHorizontally" style={{ marginTop: '3%' }}>
+                <div style={{ width: usableHeight / 10, height: usableHeight / 10 }}>
+                  <svg className="resultSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                    <circle className="pathCircle" fill="none" stroke="#ba0000" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1" />
+                    <line className="pathLine" fill="none" stroke="#ba0000" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3" />
+                    <line className="pathLine" fill="none" stroke="#ba0000" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2" />
+                  </svg>
+                </div>
+              </div>
+              <div className="centerHorizontally">
+                <p className="resultError">Verification failed</p>
+              </div>
+              <div className="centerHorizontally">
+                <p className="resultError">Voting device NOT trustworthy</p>
+              </div>
+            </div>
+          </div>
+        }
+
+        {challengeOrCast == "CHALLENGE" && selectionConfirmed &&
           <div>
             {calculatedBallotHash === '' &&
               <div className="loaderPosition">
@@ -155,13 +161,6 @@ const Result = () => {
               <div className="cardDiv">
 
                 <h1>Result</h1>
-
-                <h3>Voting Questions</h3>
-                <div>
-                  {getVotingQuestionText(votingQuestions)}
-                </div>
-
-
                 <div className="centerHorizontally" style={{ alignItems: 'stretch' }}>
                   <div className="cardDivSmall">
                     <h3>Commitment</h3>
@@ -193,6 +192,9 @@ const Result = () => {
                     <div className="centerHorizontally">
                       <p className="resultSuccess">Verification sucessful</p>
                     </div>
+                    <div className="centerHorizontally">
+                      <p className="resultSuccess">Voting device trustworthy</p>
+                    </div>
                   </div>
                 }
                 {!verificationResult &&
@@ -208,6 +210,9 @@ const Result = () => {
                     </div>
                     <div className="centerHorizontally">
                       <p className="resultError">Verification failed</p>
+                    </div>
+                    <div className="centerHorizontally">
+                      <p className="resultError">Voting device NOT trustworthy</p>
                     </div>
                   </div>
                 }
