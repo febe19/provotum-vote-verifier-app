@@ -196,7 +196,7 @@ const Scanner = () => {
     } else {
       //Create error when Commitemnt is scanned and not challenge 
       if ('id' in qrData && qrData.id === 'Commitment') {
-        dispatch({ type: RAT.ERROR, payload: "You Scanned the COmmitment again. Select either 'challenge' or 'cast' on the voting device" });
+        dispatch({ type: RAT.ERROR, payload: "You Scanned the Commitment again. Select either 'challenge' or 'cast' on the voting device" });
       }
       console.log("CHALLENGE: Problem With ID");
       return false
@@ -248,7 +248,7 @@ const Scanner = () => {
           <div className="Item">
             <div>
               <h1 className="centerHorizontally">Commitment scan successful</h1>
-              <h3> Received Ballot Hash </h3>
+              <h3>Commitment</h3>
               <p>{receivedBallotHash}</p>
               <div className="centerHorizontally">
                 <div className="hashIconDiv">
