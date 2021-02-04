@@ -28,7 +28,6 @@
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
-    "react-webcam-barcode-scanner": "0.0.2-rc2",
     "redux": "^4.0.5",
     "typescript": "^4.1.3",
     "web-vitals": "^0.2.4",
@@ -61,8 +60,5 @@
     ">0.2%",
     "not dead",
     "not op_mini all"
-  ],
-  "devDependencies": {
-    "redux-devtools-extension": "^2.13.8"
-  }
+  ]
 }
