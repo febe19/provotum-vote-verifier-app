@@ -153,7 +153,7 @@ p {
   width: 94vw;
   padding: 0.5%;
   background-color: #bbdffa;
-  border-radius: 5px;
+  border-radius: 15px;
 }
 
 .helpFlexBox {
@@ -220,8 +220,8 @@ p {
 .resultSVG {
   display: block;
   margin: 0 auto;
-  min-width: 35px;
-  min-height: 35px;
+  min-width: 20px;
+  min-height: 20px;
 }
 
 .pathCircle {

@@ -53,6 +53,7 @@ const Scanner = () => {
   console.log("== Scanner Component ============");
 
   const qrScannerRef: any = useRef(null);
+  const progressRef: any = useRef(null);
   var qrData = {}
   var questionArray: Array<any> = [];
 
@@ -233,32 +234,28 @@ const Scanner = () => {
         }
 
         {((showScanner && commitmentScanned) || (commitmentScanned && challengeScanned && showScanner)) &&
-          <div className="Item">
+          <div className="Item" ref={progressRef}>
             <div className="progressFlexbox">
               <div style={{ height: usableHeight * 0.05, marginLeft: '1%', marginRight: '5%' }} className="titel" >
                 <h3 style={{ marginTop: '0' }}>Scanning-Progress</h3>
               </div>
               {totalNrOfChallenges > 0 && scannedChallengesNumbers.map((qrCodes: any) =>
-                <div className="item">
+                <div className='item'>
                   {qrCodes &&
-                    <div>
-                      <div style={{ margin: 'auto 10%' }}>
-                        <svg className="resultSVG" style={{ height: usableHeight * 0.05 }} version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
-                          <circle className="pathCircle" fill="none" stroke="#73AF55" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1" />
-                          <polyline className="pathCheck" fill="none" stroke="#73AF55" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 " />
-                        </svg>
-                      </div>
+                    <div style={{ margin: 'auto' }}>
+                      <svg className="resultSVG" style={{ height: usableHeight * 0.05, maxWidth: ((progressRef.current.clientWidth - 170 - (progressRef.current.clientWidth * 0.05)) / scannedChallengesNumbers.length) }} version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                        <circle className="pathCircle" fill="none" stroke="#73AF55" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1" />
+                        <polyline className="pathCheck" fill="none" stroke="#73AF55" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 " />
+                      </svg>
                     </div>
                   }
                   {!qrCodes &&
-                    <div>
-                      <div style={{ margin: 'auto 10%' }}>
-                        <svg className="resultSVG" style={{ height: usableHeight * 0.05 }} version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
-                          <circle className="pathCircle" fill="none" stroke="#ba0000" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1" />
-                          <line className="pathLine" fill="none" stroke="#ba0000" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3" />
-                          <line className="pathLine" fill="none" stroke="#ba0000" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2" />
-                        </svg>
-                      </div>
+                    <div style={{ margin: 'auto' }}>
+                      <svg className="resultSVG" style={{ height: usableHeight * 0.05, maxWidth: ((progressRef.current.clientWidth - 170 - (progressRef.current.clientWidth * 0.05)) / scannedChallengesNumbers.length) }} version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                        <circle className="pathCircle" fill="none" stroke="#ba0000" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1" />
+                        <line className="pathLine" fill="none" stroke="#ba0000" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3" />
+                        <line className="pathLine" fill="none" stroke="#ba0000" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2" />
+                      </svg>
                     </div>
                   }
                 </div>

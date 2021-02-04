@@ -187,9 +187,7 @@ export default function ButtonAppBar() {
             </div>
           </div>
         </div>
-
       </Snackbar>
-
     </div >
   );
 }

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import Header from './Components/Header';
-import Scanner from "./Components/Scanner";
+import HeaderAndHelp from './Components/HeaderAndHelp';
+import Scanner from './Components/Scanner';
 import Result from './Components/Result';
 import Intro from './Components/Intro';
 import NotFound from './Components/NotFound';
@@ -38,7 +38,7 @@ function App() {
   return (
     <main >
       <div ref={headerRef}>
-        <Header />
+        <HeaderAndHelp />
       </div>
 
       <div ref={bodyRef}>
