@@ -12,45 +12,102 @@ export enum RAT {
     RESET = "RESET",
     CHALLENGE_OR_CAST = "CHALLENGE_OR_CAST",
     CALCULATED_BALLOT_HASH = "CALCULATED_BALLOT_HASH",
+    WINDOWHEIGHT = "WINDOWHEIGHT",
+    MAXSCANNERSIZE = "MAXSCANNERSIZE",
+    STATUS = "STATUS",
+    HELP_OPEN = "HELP_OPEN",
+    SELECTION_CONFIRMED = "SELECTION_CONFIRMED",
+    ERROR = "ERROR",
+}
+
+export enum AppStatus {
+    INTRO = "INTRO",
+    NOT_FOUND = "NOTFOUND",
+    SCAN_COMMITMENT ="SCAN_COMMITMENT",
+    SCAN_CHALLENGE = "SCAN_CHALLENGE",
+    CHALLENGE_OR_CAST = "CHALLENGE_OR_CAST",
+    RESULT = "RESULT",
+    CONFIRM_SELECTION = "CONFIRM_SELECTION"
 }
 
 //Redux State Type-Definition
 export type State = {
+    status: AppStatus,
     showScanner: Boolean,
     commitmentScanned: Boolean,
     challengeScanned: Boolean,
     receivedBallotHash: String,
     calculatedBallotHash: String,
-    scannedChallengesNumbers: Array<Number>,
-    totalNrOfChallenges: Number,
+    scannedChallengesNumbers: Array<any>,
+    totalNrOfChallenges: number,
     votingQuestions: Array<any>,
     CoC: String,
     result: String,
-    verificationResult: Boolean
+    verificationResult: Boolean,
+    windowHeight: number,
+    maxScannerWidth: number,
+    helpOpen: Boolean,
+    selectionConfirmed: Boolean,
+    error: String,
 }
 
 // Redux Initial State definition
 const initState: State = {
+    status: AppStatus.INTRO,
     showScanner: true,
     commitmentScanned: false,
     challengeScanned: false,
     receivedBallotHash: '',
     calculatedBallotHash: '',
     scannedChallengesNumbers: [],
-    totalNrOfChallenges: 1,
+    totalNrOfChallenges: 0,
     votingQuestions: [],
     CoC: '',
     result: '',
-    verificationResult: false
+    verificationResult: false,
+    windowHeight: 0,
+    maxScannerWidth: 0,
+    helpOpen: false,
+    selectionConfirmed: false,
+    error: '',
 };
 
 
 function Reducer(state: any = initState, action: any) {
-    if (action.type != "SCANNER_RESULT") { //TODO: Remove
-        console.log("Reducer: ", action)
-    }
-
     switch (action.type) {
+        case RAT.WINDOWHEIGHT: {
+            return {
+                ...state,
+                windowHeight: action.payload
+            }
+        };
+        case RAT.MAXSCANNERSIZE: {
+            return {
+                ...state,
+                maxScannerHeight: action.payload[0],
+                maxScannerWidth: action.payload[1]
+            }
+        };
+        case RAT.HELP_OPEN: {
+            return {
+                ...state, 
+                helpOpen: action.payload,
+                result: null,
+            }
+        }
+        case RAT.ERROR: {
+            return {
+                ...state, 
+                error: action.payload,
+                result: null,
+            }
+        }
+        case RAT.STATUS: {
+            return {
+                ...state,
+                status: action.payload
+            }
+        };
         case RAT.SCANNER_RESULT: {
             return {
                 ...state,
@@ -82,6 +139,12 @@ function Reducer(state: any = initState, action: any) {
                 ...state,
                 CoC: action.payload,
             }
+        case RAT.SELECTION_CONFIRMED: {
+            return {
+                ...state, 
+                selectionConfirmed: action.payload
+            }
+        }
         case RAT.ADD_COMMITMENT_DATA:
             // Add thequestion to a field 'Question' instead of directly to the key
             Object.entries(action.payload.VotingQuestions).forEach(([key, value]: any) => {
@@ -90,10 +153,17 @@ function Reducer(state: any = initState, action: any) {
 
             return {
                 ...state,
-                receivedBallotHash: action.payload.BH,
+                receivedBallotHash: action.payload.BH.match(/.{1,2}/g).join(' '),
                 votingQuestions: action.payload.VotingQuestions
             };
         case RAT.ADD_CHALLENGE_DATA:
+
+            // Create Array and set scanend array to true
+            if (state.scannedChallengesNumbers === [] || state.scannedChallengesNumbers.length == 0) {
+                state.scannedChallengesNumbers = new Array(action.payload.Total).fill(false)
+            }
+            state.scannedChallengesNumbers[action.payload.Counter] = true
+
             // Add non-General Data (actual Voting Question data) to the state and return it
             if (action.payload.Key != "GeneralData") {
                 var key = action.payload.Key
@@ -104,36 +174,37 @@ function Reducer(state: any = initState, action: any) {
                     reEncryptedBallot: (state.votingQuestions[key] ? (state.votingQuestions[key].reEncryptedBallot ? (state.votingQuestions[key].reEncryptedBallot) : objWithHexStrToBn(action.payload.reEncryptedBallot)) : objWithHexStrToBn(action.payload.reEncryptedBallot)),
                     reEncryptionProof: (state.votingQuestions[key] ? (state.votingQuestions[key].reEncryptionProof ? (state.votingQuestions[key].reEncryptionProof) : objWithHexStrToBn(action.payload.reEncryptionProof)) : objWithHexStrToBn(action.payload.reEncryptionProof)),
                 }
-
                 return {
                     ...state,
-                    scannedChallengesNumbers: [...state.scannedChallengesNumbers, action.payload.Counter],
+                    scannedChallengesNumbers: [...state.scannedChallengesNumbers],
                     totalNrOfChallenges: action.payload.Total,
                 }
             }
 
+            // Add General Data (Public Key)
             if (action.payload.Key == 'GeneralData') {
-                // Add General Data (Public Key)
                 return {
                     ...state,
                     publicKey: objWithHexStrToBn(action.payload.publicKey),
                     voterPublicKeyH: objWithHexStrToBn(action.payload.voterPublicKeyH),
-                    scannedChallengesNumbers: [...state.scannedChallengesNumbers, action.payload.Counter],
+                    scannedChallengesNumbers: [...state.scannedChallengesNumbers],
                     totalNrOfChallenges: action.payload.Total,
                 };
             }
-
             return {
                 ...state
             }
         case RAT.CALCULATED_BALLOT_HASH:
             return {
                 ...state,
-                calculatedBallotHash: action.payload.hash,
+                calculatedBallotHash: action.payload.hash.match(/.{1,2}/g).join(' '),
                 verificationResult: action.payload.verificationResult
             }
         case RAT.RESET:
-            return initState;
+            return {
+                ...initState,
+                windowHeight: state.windowHeight
+            };
         default:
             return initState;
     }

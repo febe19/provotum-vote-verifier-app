@@ -24,3 +24,23 @@ export const getShowScanner = (state: any) => state?.showScanner ?? false;
 
 export const getChallengeOrCast = (state: any) => state?.CoC ?? '';
 
+export const getHeight = (state: any) => state?.windowHeight ?? '';
+
+export const getMaxScannerHeight = (state: any) => state?.maxScannerHeight ?? '';
+
+export const getMaxScannerWidth = (state: any) => state?.maxScannerWidth ?? '';
+
+export const getAppStatus = (state: any) => state?.status ?? '';
+
+export const getHelpOpen = (state: any) => state?.helpOpen ?? '';
+
+export const getSelectionConfirmed = (state: any) => state?.selectionConfirmed ?? false;
+
+export const getError = (state: any) => state?.error ?? false;
+
+
+
+
+
+
+

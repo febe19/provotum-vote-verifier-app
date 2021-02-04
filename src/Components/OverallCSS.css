@@ -1,0 +1,340 @@
+h1 {
+  margin: 2% auto;
+  margin-bottom: 2%;
+}
+
+h3 {
+  margin: 2% auto;
+  margin-bottom: 0;
+  margin-left: 0;
+}
+
+p {
+  margin: 0.5% 0;
+}
+
+.blur {
+  width: 100vw;
+  height: 100vh;
+  position:absolute;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  background-color: rgba(0, 0, 0, 0.5);
+  
+}
+
+.qrScannerContainer {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  border-radius: 5%;
+  overflow: hidden;
+}
+
+.svgClass {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  z-index: 100;
+}
+
+.loaderPosition {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+}
+
+.buttonDivPosition {
+  position: fixed;
+  bottom: 2%;
+  width: 100%;
+}
+
+.centerHorizontally {
+  display: flex;
+  justify-Content: center;
+  align-Items: center;
+}
+
+.buttonDiv {
+  padding: 0.5% 2.5%;
+  width: 100%;
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  justify-content: center;
+}
+
+.buttonStyle {
+  -webkit-box-flex: 1 1 auto;
+  -moz-box-flex: 1 1 auto;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  flex-basis: auto;
+  width: 100%;
+  margin: 0 0.5%;
+}
+
+.progressFlexbox {
+  display: flex;
+}
+
+.progressFlexbox .titel {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.progressFlexbox .item {
+  flex: 1 1 auto;
+}
+
+.questionFlexbox {
+  display: flex;
+  border-radius: 25px;
+  min-width: 150px;
+  border: 2px solid #3f51b5;
+  padding: 1%;
+  margin: 0.5%;
+}
+
+.questionFlexbox .answer {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto 5% auto 1%;
+}
+
+.questionFlexbox .question {
+  flex: 1 1 auto;
+  margin: 2%;
+}
+
+.cardDiv {
+  border-radius: 25px;
+  min-width: 330px;
+  border: 2px solid #3f51b5;
+  padding: 0.5%;
+  margin: 0.5% 3%;
+}
+
+.cardDivSmall {
+  border-radius: 25px;
+  min-width: 150px;
+  border: 2px solid #3f51b5;
+  padding: 0.5%;
+  margin: 0.5%;
+}
+
+.ScannerFlexBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.ScannerFlexBox .Item {
+  flex: 0;
+  align-self: stretch;
+  border-radius: 25px;
+  border: 2px solid #3f51b5;
+  padding: 0.5%;
+  margin: 0.5% 3%;
+}
+
+.ScannerFlexBox .Scanner {
+  flex: 1;
+  align-self: stretch;
+  overflow: hidden;
+  margin: 0.5% 3%;
+}
+
+.helpSnackbar {
+  color: #023761;
+  border: 2px solid #023761;
+  width: 94vw;
+  padding: 0.5%;
+  background-color: #bbdffa;
+  border-radius: 15px;
+  margin-bottom: 2%;
+}
+
+.helpFlexBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.helpFlexBox .Item {
+  flex: 0;
+  align-self: stretch;
+  padding: 0.5%;
+  margin: 0.5% 3%;
+}
+
+.TitelBox {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.errorSnackbar {
+  color: #ffffff;
+  position: relative;
+  margin-top: 2%;
+  border: 2px solid #ffffff;
+  width: 94vw;
+  padding: 0.5%;
+  background-color: #c71111;
+  border-radius: 15px;
+}
+
+.errorFlexBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.errorFlexBox .Item {
+  flex: 0;
+  align-self: stretch;
+  padding: 0.5%;
+  margin: 0.5% 3%;
+}
+
+.hashIconDiv {
+  margin: 1% auto 0 auto;
+  min-width: 70px;
+  min-height: 70px;
+}
+
+.loaderText {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  top: 10px;
+  left: -100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #3f51b5;
+}
+
+.lds-dual-ring {
+  display: inline-block;
+  position: absolute;
+  left: -40px;
+  top: -40px;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 6px solid #3f51b5;
+  border-color: #3f51b5 transparent #3f51b5 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.resultSVG {
+  display: block;
+  margin: 0 auto;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+.pathCircle {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 0;
+  -webkit-animation: dash .9s ease-in-out;
+  animation: dash .9s ease-in-out;
+}
+
+.pathLine {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 0;
+  stroke-dashoffset: 1000;
+  -webkit-animation: dash .9s .35s ease-in-out forwards;
+  animation: dash .9s .35s ease-in-out forwards;
+}
+
+.pathCheck {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 0;
+  stroke-dashoffset: -100;
+  -webkit-animation: dash-check .9s .35s ease-in-out forwards;
+  animation: dash-check .9s .35s ease-in-out forwards;
+}
+
+.resultSuccess {
+  text-align: center;
+  margin: 0;
+  font-size: 1.25em;
+  color: #73AF55;
+}
+
+.resultError {
+  text-align: center;
+  margin: 0;
+  font-size: 1.25em;
+  color: #ba0000;
+}
+
+@-webkit-keyframes dash {
+  0% {
+    stroke-dashoffset: 1000;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 1000;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@-webkit-keyframes dash-check {
+  0% {
+    stroke-dashoffset: -100;
+  }
+  100% {
+    stroke-dashoffset: 900;
+  }
+}
+
+@keyframes dash-check {
+  0% {
+    stroke-dashoffset: -100;
+  }
+  100% {
+    stroke-dashoffset: 900;
+  }
+}

@@ -9,14 +9,10 @@ import { Provider } from "react-redux"
 import { createStore, compose } from "redux"
 import Reducer from "./Redux/Reducer"
 
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
-  }
-}
+const store = createStore(Reducer, compose)
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(Reducer, composeEnhancers()) //TODO: Remove compose Enhancer and global declaration from above
+// This App makes use of a redux store to synchronize state between differetn components. 
+// All CSS content is stored in Components/OverallCSS.css. But some things only applicable to certain elements are done with inline CSS
 
 ReactDOM.render(
   <BrowserRouter>
