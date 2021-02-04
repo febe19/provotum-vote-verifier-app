@@ -339,6 +339,8 @@ const Scanner = () => {
         </div>
       }
 
+      {error !== '' && <div className="blur" />}
+
       {error !== '' &&
         <Snackbar
           anchorOrigin={{
@@ -352,10 +354,10 @@ const Scanner = () => {
           <div className="errorSnackbar">
             <div className="errorFlexBox">
               <div className="Item">
-              <div className='TitelBox'>
-                <ErrorIcon fontSize="large" />
-                <h3 style={{ margin: 'auto', marginLeft: '3%' }}>ERROR</h3>
-              </div>
+                <div className='TitelBox'>
+                  <ErrorIcon fontSize="large" />
+                  <h3 style={{ margin: 'auto', marginLeft: '3%' }}>ERROR</h3>
+                </div>
               </div>
               <div className="Item">
                 {error}

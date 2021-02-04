@@ -13,6 +13,16 @@ p {
   margin: 0.5% 0;
 }
 
+.blur {
+  width: 100vw;
+  height: 100vh;
+  position:absolute;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
 .qrScannerContainer {
   height: 100%;
   width: 100%;

@@ -101,6 +101,9 @@ export default function ButtonAppBar() {
           </Toolbar>
         </AppBar>
       </div>
+
+      {helpOpen && <div className="blur" />}
+
       <Snackbar
         anchorOrigin={{
           vertical: 'bottom',
