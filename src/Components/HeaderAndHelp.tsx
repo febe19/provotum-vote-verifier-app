@@ -6,7 +6,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import HelpIcon from '@material-ui/icons/Help'
-import { Alert, AlertTitle } from '@material-ui/lab';
+import InfoIcon from '@material-ui/icons/Info';
 import Button from '@material-ui/core/Button';
 import logo from './../pv-logo-light-diamond.svg';
 import { Link } from "react-router-dom";
@@ -62,7 +62,6 @@ const useStylesHeader = makeStyles((theme) => ({
 
 export default function ButtonAppBar() {
   const classesHeader = useStylesHeader();
-  const classesHelp = useStylesHelp();
   const dispatch = useDispatch();
   const appStatus = useSelector(getAppStatus)
   const helpOpen = useSelector(getHelpOpen)
@@ -108,13 +107,16 @@ export default function ButtonAppBar() {
           horizontal: 'center',
         }}
         open={helpOpen}
-        autoHideDuration={10000000000}
+        autoHideDuration={10000}
         onClose={handleClose}
       >
         <div className="helpSnackbar">
           <div className="helpFlexBox">
             <div className="Item">
-              <h3 style={{ marginTop: 0 }}>HELP</h3>
+              <div className='TitelBox'>
+                <InfoIcon fontSize="large" />
+                <h3 style={{ margin: 'auto', marginLeft: '3%' }}>HELP</h3>
+              </div>
             </div>
             <div className="Item">
               {appStatus === AppStatus.SCAN_COMMITMENT &&
@@ -181,7 +183,7 @@ export default function ButtonAppBar() {
           </div>
           <div className='Item'>
             <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-              <Button variant="outlined" onClick={handleClose} color="inherit" size="small" >
+              <Button variant="outlined" onClick={handleClose} color="inherit" size="small" style={{ marginRight: '2%', marginBottom: '1%' }}>
                 Close
             </Button>
             </div>

@@ -36,6 +36,9 @@ export const getHelpOpen = (state: any) => state?.helpOpen ?? '';
 
 export const getSelectionConfirmed = (state: any) => state?.selectionConfirmed ?? false;
 
+export const getError = (state: any) => state?.error ?? false;
+
+
 
 
 

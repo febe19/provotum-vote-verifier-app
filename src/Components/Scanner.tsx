@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux"
 import Button from '@material-ui/core/Button';
 import QRScanner from './QRScanner'
+import ErrorIcon from '@material-ui/icons/Error';
 import { Hashicon } from '@emeraldpay/hashicon-react';
+import Snackbar from '@material-ui/core/Snackbar';
 import {
   getReceivedBallotHash,
   getCommitmentScanned,
@@ -15,6 +17,7 @@ import {
   getHeight,
   getHelpOpen,
   getVotingQuestions,
+  getError,
 } from '../Redux/Selector';
 import {
   RAT,
@@ -68,10 +71,12 @@ const Scanner = () => {
   const totalNrOfChallenges = useSelector(getTotalNrOfChallenges)
   const usableHeight = useSelector(getHeight)
   const helpOpen = useSelector(getHelpOpen)
+  const error = useSelector(getError)
   const votingQuestions: Array<any> = useSelector(getVotingQuestions);
 
   useEffect(() => {
     dispatch({ type: RAT.STATUS, payload: AppStatus.SCAN_COMMITMENT })
+    dispatch({ type: RAT.ERROR, payload: '' })
   }, [])
 
 
@@ -97,7 +102,7 @@ const Scanner = () => {
 
   useEffect(() => {
     // Try to parse the result to JSON format
-    if (result !== null && !helpOpen) {
+    if (!helpOpen && result !== null) {
       qrData = {};
       try {
         qrData = JSON.parse(result)
@@ -107,6 +112,7 @@ const Scanner = () => {
 
       } catch {
         console.log("Could not parse JSON --> Result", result.text);
+        dispatch({ type: RAT.ERROR, payload: "You Scanned an invalid QR Code. Ensure only scanning QR Codes displayed by the voting device" });
         return;
       }
 
@@ -148,6 +154,7 @@ const Scanner = () => {
     if ('id' in qrData && qrData.id === "Commitment") {
       if ('Counter' in qrData && 'Total' in qrData && qrData.Counter <= qrData.Total) {
         if (('BH' in qrData) && ('VotingQuestions' in qrData)) {
+          dispatch({ type: RAT.ERROR, payload: "" })
           return true
         } else {
           console.log("COMMITMENT: Missing Data")
@@ -158,6 +165,9 @@ const Scanner = () => {
         return false
       }
     } else {
+      if ('id' in qrData && qrData.id === "Challenge") {
+        dispatch({ type: RAT.ERROR, payload: "You Scanned the Challenge but you should have scanned the commitment first. Please restart." });
+      }
       console.log("COMMITNEMT: Problem With ID")
       return false
     }
@@ -168,6 +178,7 @@ const Scanner = () => {
     if ('id' in qrData && qrData.id === "Challenge") {
       if ('Counter' in qrData && 'Total' in qrData && qrData.Counter <= qrData.Total) {
         if (!scannedChallengesNumbers.includes(qrData.Counter)) {
+          dispatch({ type: RAT.ERROR, payload: "" })
           return true;
         } else {
           console.log("CHALLENGE: Already scanned challenge with ID: ", qrData.Counter);
@@ -178,6 +189,9 @@ const Scanner = () => {
         return false
       }
     } else {
+      if ('id' in qrData && qrData.id === 'Commitment') {
+        dispatch({ type: RAT.ERROR, payload: "You Scanned the COmmitment again. Select either 'challenge' or 'cast' on the voting device" });
+      }
       console.log("CHALLENGE: Problem With ID");
       return false
     }
@@ -206,6 +220,10 @@ const Scanner = () => {
     dispatch({ type: RAT.SELECTION_CONFIRMED, payload: false })
   }
 
+  const handleErrorClose = () => {
+    dispatch({ type: RAT.ERROR, payload: '' })
+  };
+
   return (
     <div>
       <div className="ScannerFlexBox" style={{ height: usableHeight, maxHeight: usableHeight }}>
@@ -213,7 +231,7 @@ const Scanner = () => {
         {showScanner && !commitmentScanned &&
           <div className="Item">
             <div className="centerHorizontally">
-              <h1 style={{ marginBottom: "1%" }}>Scan Commitment</h1>
+              <h1 style={{ marginBottom: "1%", marginTop: '1%' }}>Scan Commitment</h1>
             </div>
           </div>
         }
@@ -321,6 +339,38 @@ const Scanner = () => {
         </div>
       }
 
+      {error !== '' &&
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          open={error !== ''}
+          autoHideDuration={5000}
+          onClose={handleErrorClose}
+        >
+          <div className="errorSnackbar">
+            <div className="errorFlexBox">
+              <div className="Item">
+              <div className='TitelBox'>
+                <ErrorIcon fontSize="large" />
+                <h3 style={{ margin: 'auto', marginLeft: '3%' }}>ERROR</h3>
+              </div>
+              </div>
+              <div className="Item">
+                {error}
+              </div>
+            </div>
+            <div className='Item'>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                <Button variant="outlined" onClick={handleErrorClose} color="inherit" size="small" style={{ marginRight: '2%', marginBottom: '1%' }}>
+                  Close
+              </Button>
+              </div>
+            </div>
+          </div>
+        </Snackbar>
+      }
     </div>
   )
 }

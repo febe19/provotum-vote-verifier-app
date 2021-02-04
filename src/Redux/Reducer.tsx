@@ -17,6 +17,7 @@ export enum RAT {
     STATUS = "STATUS",
     HELP_OPEN = "HELP_OPEN",
     SELECTION_CONFIRMED = "SELECTION_CONFIRMED",
+    ERROR = "ERROR",
 }
 
 export enum AppStatus {
@@ -47,6 +48,7 @@ export type State = {
     maxScannerWidth: number,
     helpOpen: Boolean,
     selectionConfirmed: Boolean,
+    error: String,
 }
 
 // Redux Initial State definition
@@ -66,7 +68,8 @@ const initState: State = {
     windowHeight: 0,
     maxScannerWidth: 0,
     helpOpen: false,
-    selectionConfirmed: false
+    selectionConfirmed: false,
+    error: '',
 };
 
 
@@ -74,6 +77,7 @@ function Reducer(state: any = initState, action: any) {
     if (action.type != RAT.SCANNER_RESULT) { //TODO: Remove
         console.log("Reducer: ", action)
     }
+    console.log("Reducer: ", action)
 
     switch (action.type) {
         case RAT.WINDOWHEIGHT: {
@@ -92,7 +96,15 @@ function Reducer(state: any = initState, action: any) {
         case RAT.HELP_OPEN: {
             return {
                 ...state, 
-                helpOpen: action.payload
+                helpOpen: action.payload,
+                result: null,
+            }
+        }
+        case RAT.ERROR: {
+            return {
+                ...state, 
+                error: action.payload,
+                result: null,
             }
         }
         case RAT.STATUS: {

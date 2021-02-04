@@ -1,5 +1,5 @@
 h1 {
-  margin: 1% auto;
+  margin: 2% auto;
   margin-bottom: 4%;
 }
 
@@ -150,10 +150,12 @@ p {
 
 .helpSnackbar {
   color: #023761;
+  border: 2px solid #023761;
   width: 94vw;
   padding: 0.5%;
   background-color: #bbdffa;
   border-radius: 15px;
+  margin-bottom: 2%;
 }
 
 .helpFlexBox {
@@ -169,6 +171,35 @@ p {
   margin: 0.5% 3%;
 }
 
+.TitelBox {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.errorSnackbar {
+  color: #ffffff;
+  position: relative;
+  margin-top: 2%;
+  border: 2px solid #ffffff;
+  width: 94vw;
+  padding: 0.5%;
+  background-color: #c71111;
+  border-radius: 15px;
+}
+
+.errorFlexBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.errorFlexBox .Item {
+  flex: 0;
+  align-self: stretch;
+  padding: 0.5%;
+  margin: 0.5% 3%;
+}
 
 .hashIconDiv {
   margin: 1% auto 0 auto;
