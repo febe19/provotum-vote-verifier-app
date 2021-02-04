@@ -10,15 +10,14 @@ import {
   RAT
 } from './Redux/Reducer'
 
-
 function App() {
   const dispatch = useDispatch()
   const headerRef: any = useRef(null);
   const bodyRef: any = useRef(null);
   var usableHeight: number = 0;
 
-  console.log("== App ============");
-
+  // Resize handler for windw size detection. This is used for the scanner size
+  // Size is stored into the Redux Store
   useEffect(() => {
     const resizeHandler = () => {
       usableHeight = window.innerHeight - headerRef.current!.clientHeight;  

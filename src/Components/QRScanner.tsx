@@ -1,4 +1,3 @@
-import BarcodeScannerComponent from "react-webcam-barcode-scanner"; //https://www.npmjs.com/package/react-webcam-barcode-scanner TODO: Eventually delete
 import { useSelector, useDispatch } from "react-redux"
 import './OverallCSS.css'
 import React from 'react';
@@ -11,6 +10,10 @@ import {
     getMaxScannerHeight,
     getMaxScannerWidth,
 } from '../Redux/Selector';
+
+// Component consisting of the QR code scanner and the white frame to illustrate the focus.
+// Results are stored in the redux store directly after scanning and then parsed in the scanner component. 
+// The maximal scanner size is also conducted form the Redux store. This is needed, that the scanner is maximized but never too big
 
 const QRScanner = () => {
     const dispatch = useDispatch()

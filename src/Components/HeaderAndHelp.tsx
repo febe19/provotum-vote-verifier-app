@@ -21,18 +21,9 @@ import {
   RAT
 } from '../Redux/Reducer'
 
-//function Alert(props: AlertProps) {
-//  return <MuiAlert elevation={6} variant="filled" {...props} />;
-//}
-
-const useStylesHelp = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    '& > * + *': {
-      marginTop: theme.spacing(2),
-    },
-  },
-}));
+// This component includes the header bar and the help cards. 
+// The Help COntent is determined via Redux Store and the curernt AppStatus which is set whenever some steps are archieved in the flow.
+// HelpOpen and Close is also stored to redux, such that other components can determine wheter help is open curently. 
 
 const useStylesHeader = makeStyles((theme) => ({
   root: {
@@ -89,7 +80,7 @@ export default function ButtonAppBar() {
             <Typography variant="h6" className={classesHeader.title} >
               Provotum Vote Verifier
           </Typography>
-            {!(appStatus === AppStatus.INTRO || appStatus === AppStatus.NOT_FOUND || (appStatus === AppStatus.RESULT && !selectionConfirmed)) &&
+            {!(appStatus === AppStatus.NOT_FOUND || (appStatus === AppStatus.RESULT && !selectionConfirmed)) &&
               <div>
                 <section className={classesHeader.rightToolbar}>
                   <IconButton onClick={helpClicked} color="inherit" >
@@ -122,6 +113,17 @@ export default function ButtonAppBar() {
               </div>
             </div>
             <div className="Item">
+              {appStatus === AppStatus.INTRO &&
+                <div>
+                  <div>
+                    Vote verification is an important tool in eVoting to ensure correct encryption of a ballot by the voting device. With the help of vote verification it is possible to detect untrustworthy voting devices. You should never vote with untrustworty devices.
+                  </div>
+                  <div>
+                    <br/>
+                    This application helps you to verify your ballot and the encryption thereof. Whenever you have questions, click on the question mark in the top right corner.
+                  </div>
+                </div>
+              }
               {appStatus === AppStatus.SCAN_COMMITMENT &&
                 <div>
                   <div>

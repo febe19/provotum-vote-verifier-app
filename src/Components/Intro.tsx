@@ -8,10 +8,12 @@ import {
     AppStatus
 } from '../Redux/Reducer'
 
+// The intro is used as a start site. Furthermore it resets the Redux store when coming back from verification
 
 const Intro = () => {
-    console.log("== Intro ============");
     const dispatch = useDispatch()
+
+    // Reset Redux Store 
     dispatch({ type: RAT.RESET });
     dispatch({ type: RAT.STATUS, payload: AppStatus.INTRO})
 
@@ -19,11 +21,11 @@ const Intro = () => {
         <div>
             <div className="cardDiv">
                 <h1>Welcome</h1>
-                <p>This application is used for the vote verification in the provotum environment.</p>
+                <p>This application is used for vote verification in the provotum environment.</p>
                 <p>To verify your vote follow the steps below:</p>
                 <ol>
-                    <li>Select "Verify" on the voting frontend</li>
-                    <li>Select "Verify" on the this device</li>
+                    <li>Select 'verify' on the voting device</li>
+                    <li>Select 'verify' on the this device</li>
                 </ol>
             </div>
             <div className="buttonDivPosition">

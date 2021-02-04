@@ -74,11 +74,6 @@ const initState: State = {
 
 
 function Reducer(state: any = initState, action: any) {
-    if (action.type != RAT.SCANNER_RESULT) { //TODO: Remove
-        console.log("Reducer: ", action)
-    }
-    console.log("Reducer: ", action)
-
     switch (action.type) {
         case RAT.WINDOWHEIGHT: {
             return {

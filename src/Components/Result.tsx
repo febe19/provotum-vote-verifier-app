@@ -29,7 +29,7 @@ import {
   ElGamalPublicKey,
 } from '@hoal/evote-crypto-ts'
 
-// Actual Encryption of the data. 
+// Encryption of teh received data, which is all stored in teh Redux Store
 function CreateEncryptedBallot(votingQuestions: Array<any>, publicKey: ElGamalPublicKey, voterPublicKeyH: BN) {
   var allVerified: any = null
   var verifies: Boolean = false
@@ -42,8 +42,12 @@ function CreateEncryptedBallot(votingQuestions: Array<any>, publicKey: ElGamalPu
     }
     const encryptedVote: Array<any> = []
 
+    // Encrypt the ballot with the data received.
     const encryptedBallot = encrypt(value.answerBin, publicKey, value.nonce);
 
+    // Verify the reencryption proof. 
+    // It is enough, when the actual reencryption proof and the newly created encrypted ballot are compared. 
+    // If the reencryption proof does not verify with the encrypted ballot, allVerified is false and the verification will fail. 
     var verifies = verifyReEncryptionProof(
       value.reEncryptionProof,
       value.reEncryptedBallot,
@@ -70,8 +74,11 @@ function CreateEncryptedBallot(votingQuestions: Array<any>, publicKey: ElGamalPu
   return [encryptedBallots, verifies]
 }
 
+// This component handles the differetn results. 
+// Animated Checkmark and cross: https://codepen.io/elevaunt/pen/VvKdVa
+// The content of the result component is basically only handled in HTML and determined by the content in the Redux store. 
+
 const Result = () => {
-  console.log("== Result ============");
 
   // REDUX Definitions
   const dispatch = useDispatch()
@@ -87,11 +94,9 @@ const Result = () => {
   const helpOpen = useSelector(getHelpOpen)
   var encryptionResult: Array<any> = []
 
-  console.log("Voting Questions: ", votingQuestions)
-
   dispatch({ type: RAT.STATUS, payload: AppStatus.RESULT })
 
-  // Encrypt the ballots wiht the received data and dispatch it to the Redux Store
+  // Encrypt the ballots wiht the received data and dispatch encryption result to the Redux Store
   useEffect(() => {
     encryptionResult = CreateEncryptedBallot(votingQuestions, publicKey, voterPublicKeyH);
     dispatch({
@@ -106,7 +111,6 @@ const Result = () => {
   return (
     <div>
       <div>
-
         {challengeOrCast == "CAST" &&
           <div className="cardDiv">
             <h1>Cast</h1>

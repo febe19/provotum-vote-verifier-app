@@ -24,9 +24,11 @@ import {
   AppStatus,
 } from '../Redux/Reducer'
 
+// This is used to display the voting question in the vote confirmation phase. 
 const getVotingQuestionText = (votingQuestions: Array<any>) => {
   var questionArray: Array<any> = [];
 
+  // Add all questions and answers to the Question Array
   Object.entries(votingQuestions).forEach(([key, value]) => {
     if (value.answerBin === undefined) {
       return
@@ -34,6 +36,7 @@ const getVotingQuestionText = (votingQuestions: Array<any>) => {
     questionArray.push([value.Question, value.answerBin])
   })
 
+  // Map the questions and the answers in a flexbox and return them.
   return (
     <div>
       {questionArray.map((Questions: any) =>
@@ -53,12 +56,9 @@ const getVotingQuestionText = (votingQuestions: Array<any>) => {
 }
 
 const Scanner = () => {
-  console.log("== Scanner Component ============");
-
   const qrScannerRef: any = useRef(null);
   const progressRef: any = useRef(null);
-  var qrData = {}
-  var questionArray: Array<any> = [];
+  var qrData: any = {}
 
   //REDUX definitions
   const dispatch = useDispatch()
@@ -74,12 +74,13 @@ const Scanner = () => {
   const error = useSelector(getError)
   const votingQuestions: Array<any> = useSelector(getVotingQuestions);
 
+  // Set App Status
   useEffect(() => {
     dispatch({ type: RAT.STATUS, payload: AppStatus.SCAN_COMMITMENT })
     dispatch({ type: RAT.ERROR, payload: '' })
   }, [])
 
-
+  // Check fo window resizing and thus also for resiszing of the scanner component
   useEffect(() => {
     const scannerResizeHandler = () => {
       if (showScanner) {
@@ -100,24 +101,31 @@ const Scanner = () => {
     }
   }, [usableHeight, showScanner])
 
+  // Handle new result in redux store. also check whenever help is openend, since it should not scan, when help is overlaying the scanner. 
   useEffect(() => {
-    // Try to parse the result to JSON format
+    // Check if help is open and if there is a new result in the store. 
     if (!helpOpen && result !== null) {
+      // Try to parse the result to JSON format into qrData.
       qrData = {};
       try {
         qrData = JSON.parse(result)
-        if ('id' in qrData && ('Commitment' in qrData || 'Challenge' in qrData)) {
+        if ((result !== null && result !== undefined && result !== '') && 'id' in qrData && (qrData.id === 'Commitment' || qrData.id === 'Challenge')) {
           console.log("Looks like a valid QRCode")
+        } else {
+          throw "Wrong QR Code"
         }
-
       } catch {
+        //Catch if not possible to parse and if QR code does not belong to the provotum environment. Show Error if so. 
         console.log("Could not parse JSON --> Result", result.text);
-        dispatch({ type: RAT.ERROR, payload: "You Scanned an invalid QR Code. Ensure only scanning QR Codes displayed by the voting device" });
+        if (result !== undefined && result !== '') {
+          dispatch({ type: RAT.ERROR, payload: "You Scanned an invalid QR Code. Ensure only scanning QR Codes displayed by the voting device" });
+        }
         return;
       }
 
-      // Add qrData to commitment or challenge in Redux store. Before this check if it is needed anymore.
+      // Add qrData to commitment or challenge in Redux store. Do checks wheter it is Challange or commitment and also if commitment is still needed.
       if (!commitmentScanned && qrCodeIsCommitment(qrData)) {
+        // adjust Redux store when commitemnt is scanned successfully.
         dispatch({ type: RAT.HIDE_SCANNER })
         dispatch({ type: RAT.COMMITMENT_SCANNED })
         dispatch({ type: RAT.STATUS, payload: AppStatus.CHALLENGE_OR_CAST })
@@ -126,22 +134,15 @@ const Scanner = () => {
       } else if (commitmentScanned && !challengeScanned && qrCodeIsChallenge(qrData)) {
         dispatch({ type: RAT.ADD_CHALLENGE_DATA, payload: qrData })
 
-        // Iff all challenges are scanned, hide the scanner 
+        // Iff all challenges are scanned, hide the scanner and set challenge scanned to true
         if (scannedChallengesNumbers !== 'undefined' && scannedChallengesNumbers.length > 0 && scannedChallengesNumbers.every((v: any) => v === true)) {
           dispatch({ type: RAT.CHALLENGE_SCANNED })
 
+          // Wait until anymation for checkmark is finished.
           setTimeout(() => {
             dispatch({ type: RAT.HIDE_SCANNER })
             dispatch({ type: RAT.STATUS, payload: AppStatus.CONFIRM_SELECTION })
           }, 1000);
-
-          Object.entries(votingQuestions).forEach(([key, value]) => {
-            console.log("Key: ", key, "--> Value: ", value)
-            if (value.answerBin === undefined) {
-              return
-            }
-            questionArray.push([value.Question, value.answerBin])
-          })
         }
       } else {
         return;
@@ -157,14 +158,17 @@ const Scanner = () => {
           dispatch({ type: RAT.ERROR, payload: "" })
           return true
         } else {
+          dispatch({ type: RAT.ERROR, payload: "You Scanned an invalid QR Code. Ensure only scanning QR Codes displayed by the voting device" });
           console.log("COMMITMENT: Missing Data")
           return false
         }
       } else {
+        dispatch({ type: RAT.ERROR, payload: "You Scanned an invalid QR Code. Ensure only scanning QR Codes displayed by the voting device" });
         console.log("COMMITNEMT: Problem with Counter")
         return false
       }
     } else {
+      // Create error, when commitemnt is scanned instead of challenge
       if ('id' in qrData && qrData.id === "Challenge") {
         dispatch({ type: RAT.ERROR, payload: "You Scanned the Challenge but you should have scanned the commitment first. Please restart." });
       }
@@ -185,10 +189,12 @@ const Scanner = () => {
           return false
         }
       } else {
+        dispatch({ type: RAT.ERROR, payload: "You Scanned an invalid QR Code. Ensure only scanning QR Codes displayed by the voting device" });
         console.log("CHALLENGE: Problem with Counter");
         return false
       }
     } else {
+      //Create error when Commitemnt is scanned and not challenge 
       if ('id' in qrData && qrData.id === 'Commitment') {
         dispatch({ type: RAT.ERROR, payload: "You Scanned the COmmitment again. Select either 'challenge' or 'cast' on the voting device" });
       }
@@ -197,29 +203,31 @@ const Scanner = () => {
     }
   }
 
-  // When User selects Challenge, show scanner
+  // When User selects Challenge, show scanner and adjust status
   const onChallenge = () => {
     dispatch({ type: RAT.SHOW_SCANNER })
     dispatch({ type: RAT.STATUS, payload: AppStatus.SCAN_CHALLENGE })
     dispatch({ type: RAT.CHALLENGE_OR_CAST, payload: "CHALLENGE" })
   }
 
-  // When User selects Cast, hide scanner, Link to result in HTML
+  // When User selects Cast, hide scanner, Link to result in HTML, adjust status
   const onCast = () => {
     dispatch({ type: RAT.HIDE_SCANNER })
     dispatch({ type: RAT.STATUS, payload: AppStatus.RESULT })
     dispatch({ type: RAT.CHALLENGE_OR_CAST, payload: "CAST" })
   }
 
+  // When user confirms on the displayed voting questionsa dn answers
   const onConfirmSelection = () => {
     dispatch({ type: RAT.SELECTION_CONFIRMED, payload: true })
   }
 
-  // When User selects Cast, hide scanner, Link to result in HTML
+  // When user does not confirm on the displayed voting questionsa dn answers.
   const onNOTConfirmSelection = () => {
     dispatch({ type: RAT.SELECTION_CONFIRMED, payload: false })
   }
 
+  // Handle when error gets closed 
   const handleErrorClose = () => {
     dispatch({ type: RAT.ERROR, payload: '' })
   };
@@ -284,7 +292,7 @@ const Scanner = () => {
 
         {commitmentScanned && challengeScanned && !showScanner &&
           <div className="Item">
-            <h3>Voting Questions</h3>
+            <h3 style={{ marginTop: '3%' }}>Voting Questions</h3>
             <div className="centerHorizontally">
               {getVotingQuestionText(votingQuestions)}
             </div>
