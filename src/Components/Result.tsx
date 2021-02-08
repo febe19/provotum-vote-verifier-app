@@ -67,10 +67,11 @@ function CreateEncryptedBallot(votingQuestions: Array<any>, publicKey: ElGamalPu
     // Push to arrays for hashing 
     encryptedVote.push(key);
     encryptedVote.push(cipherToSubstrate);
-    encryptedBallots.push(encryptedVote)
+    encryptedVote.push(encryptedBallot);
+    encryptedBallots.push(encryptedVote);
   })
 
-  verifies = allVerified !== null ? (allVerified) : (false)
+  verifies = allVerified !== null ? (allVerified) : (false);
   return [encryptedBallots, verifies]
 }
 
@@ -99,6 +100,7 @@ const Result = () => {
   // Encrypt the ballots wiht the received data and dispatch encryption result to the Redux Store
   useEffect(() => {
     encryptionResult = CreateEncryptedBallot(votingQuestions, publicKey, voterPublicKeyH);
+    console.log(JSON.stringify(encryptionResult[0]))
     dispatch({
       type: RAT.CALCULATED_BALLOT_HASH,
       payload: {
