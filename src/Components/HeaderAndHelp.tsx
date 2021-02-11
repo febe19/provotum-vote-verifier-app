@@ -116,7 +116,7 @@ export default function ButtonAppBar() {
               {appStatus === AppStatus.INTRO &&
                 <div>
                   <div>
-                    Vote verification is an important tool in eVoting to ensure correct encryption of a ballot by the voting device. With the help of vote verification it is possible to detect untrustworthy voting devices. You should never vote with untrustworty devices.
+                    Vote verification is an important tool in eVoting to ensure correct encryption of a ballot by the voting device. With the help of vote verification, it is possible to detect untrustworthy voting devices. You should never vote with untrustworthy devices.
                   </div>
                   <div>
                     <br/>
@@ -137,13 +137,13 @@ export default function ButtonAppBar() {
               {appStatus === AppStatus.CHALLENGE_OR_CAST &&
                 <div>
                   <div>
-                    On the top of the screen you see the commitment. This includes the ballot's hash and a visual representation thereof. Compare the numbers and/or the visualization with the one showed on the voting device.
+                    On the top of the screen, you see the commitment. This includes the ballot's hash and a visual representation thereof. Compare the numbers and/or the visualization with the one showed on the voting device.
                   </div>
                   <div style={{ marginTop: '2%' }}>
-                    Here you have can either select 'Challenge' or 'Cast'.
+                    Here you have can either select <i>CHALLENGE</i> or <i>CAST</i>.
                   </div>
                   <div style={{ fontWeight: 'bold' }}>Challenge </div>
-                  <div>You can challenge the challenge the encryption and trustworthiness of the voting device.</div>
+                  <div>You can challenge the encryption and trustworthiness of the voting device.</div>
                   <div style={{ fontWeight: 'bold' }}>Cast </div>
                   <div>You can cast the ballot and finish voting on the voting device</div>
                 </div>
@@ -154,7 +154,7 @@ export default function ButtonAppBar() {
                     Here you have to scan the challenge.
                   </div>
                   <div>
-                    The challenge is a combination of multiple QR-codes which will be visible on the voring device.
+                    The challenge is a combination of multiple QR-codes that will be visible on the voting device.
                   </div>
                   <div>
                     Just keep the camera on the QR-codes until the Scan-Progress shows ticks in every circle.
@@ -164,10 +164,10 @@ export default function ButtonAppBar() {
               {appStatus === AppStatus.CONFIRM_SELECTION &&
                 <div>
                   <div>
-                    Here you have to confirm, if the shown voting options are the ones you selected on the voting device.
+                    Here you have to confirm if the shown voting options are the ones you selected on the voting device.
                   </div>
-                  <div>
-                    If so, confirm with 'Yes', else deny with 'No'.
+                  <div style={{display: 'inline-block'}}>
+                    If so, confirm with <i>YES</i>, else deny with <i>NO</i>.
                   </div>
                 </div>
               }
@@ -177,10 +177,10 @@ export default function ButtonAppBar() {
                     Here you see the result of the vote verification.
                   </div>
                   <div>
-                    If the Encryption is similar your vote was encrypted correctly on the voting device and the voting device is trustworthy.
+                    If the encryption is similar your vote was encrypted correctly on the voting device and the voting device is trustworthy.
                   </div>
-                  <div>
-                    Go back to start to beginn a new round in wich you can cast your vote.
+                  <div style={{display: 'inline-block'}}>
+                    Select <i>BACK TO START</i> on both devices and start a new round in which you may cast your vote.
                   </div>
                 </div>
               }

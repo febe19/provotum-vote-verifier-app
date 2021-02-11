@@ -117,7 +117,7 @@ const Result = () => {
           <div className="cardDiv">
             <h1>Cast</h1>
             <div style={{ marginBottom: '2%' }}>
-              <p>You selcted cast. Therefore, also select cast on the voting machine.</p>
+              <p>You selected cast. Therefore, also select cast on the voting machine.</p>
             </div>
           </div>
         }

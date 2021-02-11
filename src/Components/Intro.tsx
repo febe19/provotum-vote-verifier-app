@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { useDispatch } from 'react-redux';
+import HelpIcon from '@material-ui/icons/Help'
 import Button from '@material-ui/core/Button';
 import './OverallCSS.css'
 import {
-    RAT, 
+    RAT,
     AppStatus
 } from '../Redux/Reducer'
 
@@ -15,18 +16,21 @@ const Intro = () => {
 
     // Reset Redux Store 
     dispatch({ type: RAT.RESET });
-    dispatch({ type: RAT.STATUS, payload: AppStatus.INTRO})
+    dispatch({ type: RAT.STATUS, payload: AppStatus.INTRO })
 
     return (
         <div>
             <div className="cardDiv">
                 <h1>Welcome</h1>
-                <p>This application is used for vote verification in the provotum environment.</p>
+                <p style={{display: 'inline-block'}}>This application is used for vote verification in the provotum environment. For information about vote verification press on the <i>Help Button</i> in the top right corner.</p>
                 <p>To verify your vote follow the steps below:</p>
-                <ol>
-                    <li>Select 'verify' on the voting device</li>
-                    <li>Select 'verify' on the this device</li>
+                <ol style={{marginTop: 0}}>
+                    <li>Encrypt the vote on the voting device.</li>
+                    <li>Select <i>VERIFY</i> on this device and then scan the displayed QR-codes displayed on the voting device.</li>
                 </ol>
+                <h3>Important</h3>
+                <p>The device you want to use to verify the vote must have a camera and must be different from the device you are voting on.</p>
+                <p>It is suggested to vote on a computer and verify the vote with a smartphone or tablet.</p>
             </div>
             <div className="buttonDivPosition">
                 <div className="buttonDiv">
